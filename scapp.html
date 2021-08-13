@@ -45,9 +45,30 @@ document.on("ready", function() {
     utils.focusWindow();
 });
 
+document.on("click", "button", function() {
+    fetch("https://httpbin.org/post", {
+        method: "POST",
+        cache: "no-cache",
+        headers: {
+            "Content-Type": "application/json; charset=utf-8"
+        },
+        body: JSON.stringify({
+            a: 1,
+            b: "Textual content",
+        })
+    }).then(function(response) {
+        console.log(response.status);
+        console.log(JSON.stringify(response.json(), "   "));
+        console.log(response.json());
+    }).catch(function(error) {
+        console.exception(error);
+    })
+});
+
 </script>
 </head>
 <body>
+    <button>first request</button>
     <plaintext #logger readonly />
 </body>
 </html>
