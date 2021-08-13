@@ -14,7 +14,7 @@ import {logger} from "vendor/8ctopus/sciter-logger/src/logger.js";
 import * as utils from "vendor/8ctopus/sciter-utils/src/utils.js";
 
 // initialize logger
-logger.init("", true);
+logger.init();
 
 // attach logger to console
 logger.attach();
@@ -62,9 +62,7 @@ document.on("click", "button", async function() {
 
     const json = await response.json();
 
-    console.log(JSON.stringify(json, null, 4));
-    //console.log(response.json());
-
+    console.log(json);
 });
 
 </script>
