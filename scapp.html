@@ -12,6 +12,7 @@
 
 import {logger} from "vendor/8ctopus/sciter-logger/src/logger.js";
 import * as utils from "vendor/8ctopus/sciter-utils/src/utils.js";
+import {uuid} from "@sciter";
 
 // initialize logger
 logger.init();
@@ -21,7 +22,6 @@ logger.attach();
 
 // capture unhandled exceptions
 logger.capture();
-
 
 document.on("ready", function() {
     logger.plaintext(document.$("plaintext#logger"));
@@ -43,6 +43,8 @@ document.on("ready", function() {
 
     // focus window
     utils.focusWindow();
+
+    console.log(`Universally unique identifier - ` + uuid());
 });
 
 document.on("click", "button", async function() {
@@ -53,8 +55,8 @@ document.on("click", "button", async function() {
             "Content-Type": "application/json; charset=utf-8"
         },
         body: JSON.stringify({
-            a: 1,
-            b: "Textual content",
+            uuid: uuid(),
+            event: "button clicked",
         })
     });
 
