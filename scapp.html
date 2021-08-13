@@ -1,0 +1,53 @@
+<html
+    window-width="800dip"
+    window-height="400dip"
+>
+<head>
+<style>
+
+@import url(vendor/8ctopus/sciter-logger/src/logger.css);
+
+</style>
+<script type="module">
+
+import {logger} from "vendor/8ctopus/sciter-logger/src/logger.js";
+import * as utils from "vendor/8ctopus/sciter-utils/src/utils.js";
+
+// initialize logger
+logger.init("", true);
+
+// attach logger to console
+logger.attach();
+
+// capture unhandled exceptions
+logger.capture();
+
+
+document.on("ready", function() {
+    logger.plaintext(document.$("plaintext#logger"));
+
+    // log sciter version
+    console.debug(utils.sciterInfo());
+
+    // center window on screen
+    utils.centerWindow("screen");
+
+    // add support for F5 reload
+    utils.addReloadWindow();
+
+    // close window on escape key press
+    utils.closeWindowOnEscape();
+
+    // bring window to front
+    utils.windowToFront();
+
+    // focus window
+    utils.focusWindow();
+});
+
+</script>
+</head>
+<body>
+    <plaintext #logger readonly />
+</body>
+</html>
