@@ -45,8 +45,8 @@ document.on("ready", function() {
     utils.focusWindow();
 });
 
-document.on("click", "button", function() {
-    fetch("https://httpbin.org/post", {
+document.on("click", "button", async function() {
+    const response = await fetch("https://httpbin.org/post", {
         method: "POST",
         cache: "no-cache",
         headers: {
@@ -56,13 +56,15 @@ document.on("click", "button", function() {
             a: 1,
             b: "Textual content",
         })
-    }).then(function(response) {
-        console.log(response.status);
-        console.log(JSON.stringify(response.json(), "   "));
-        console.log(response.json());
-    }).catch(function(error) {
-        console.exception(error);
-    })
+    });
+
+    console.log(`response status - ${response.status}`);
+
+    const json = await response.json();
+
+    console.log(JSON.stringify(json, null, 4));
+    //console.log(response.json());
+
 });
 
 </script>
