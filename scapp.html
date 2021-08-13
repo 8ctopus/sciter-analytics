@@ -107,6 +107,20 @@ document.on("click", "button#amplitude", function() {
     myfetch(url, headers, body);
 });
 
+document.on("click", "button#mixpanel", function() {
+    const url = "https://api.mixpanel.com/track";
+
+    const body = JSON.stringify({
+        "event": "Signed up",
+        "properties": {
+            "distinct_id": "13793",
+            "token": "YOUR_PROJECT_TOKEN",
+        }
+    });
+
+    myfetch(url, headers, body);
+});
+
 async function myfetch(url, headers, body)
 {
     const response = await fetch(url, {
@@ -121,6 +135,7 @@ async function myfetch(url, headers, body)
 
     const json = await response.json();
 
+    //console.log(response.text());
     console.log(json);
 }
 
@@ -129,6 +144,7 @@ async function myfetch(url, headers, body)
 <body>
     <button #httpbin>httpbin</button>
     <button #amplitude>amplitude</button>
+    <button #mixpanel>mixpanel</button>
     <plaintext #logger readonly />
 </body>
 </html>
