@@ -1,7 +1,7 @@
 # sciter in-app analytics
 
 This is a [sciter.js](https://sciter.com/) in-app analytics experiment.
-The idea is to be able to monitor what users do within the application.
+The general idea is to record what users do within the application.
 
 ## demo
 
