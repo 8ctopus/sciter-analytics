@@ -51,27 +51,6 @@ document.on("ready", function() {
     utils.focusWindow();
 
     console.log(`Universally unique identifier - ` + uuid());
-
-    document.on("click", function(event, element) {
-        const pagecontrol = document.$("pagecontrol");
-
-        switch (element.id) {
-            case "btLogin":
-                pagecontrol.showTab("tsDashboard");
-                break;
-
-            case "createAccount":
-                pagecontrol.showTab("tsSignup");
-                break;
-
-            case "forgotPassword":
-                pagecontrol.showTab("tsReset");
-                break;
-
-            default:
-
-        }
-    });
 });
 
 const headers = {
@@ -142,6 +121,31 @@ document.on("click", "button#mixpanel", function() {
     });
 
     myfetch(url, headers, body);
+});
+
+document.on("click", function(event, element) {
+    const pagecontrol = document.$("pagecontrol");
+
+    switch (element.id) {
+        case "btLogin":
+            pagecontrol.showTab("tsDashboard");
+            break;
+
+        case "createAccount":
+            pagecontrol.showTab("tsSignup");
+            break;
+
+        case "forgotPassword":
+            pagecontrol.showTab("tsReset");
+            break;
+
+        default:
+    }
+});
+
+// handle show tab event
+document.on("showtab", "pagecontrol", function(event, element) {
+    console.debug(event.detail.tab);
 });
 
 async function myfetch(url, headers, body)
