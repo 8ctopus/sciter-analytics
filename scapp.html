@@ -1,15 +1,13 @@
 <html
     window-width="800dip"
-    window-height="600dip"
+    window-height="800dip"
 >
 <head>
 <style>
 
 @import url(vendor/8ctopus/sciter-logger/src/logger.css);
-
-body {
-    border-spacing: 1em;
-}
+@import url(vendor/8ctopus/sciter-pagecontrol/src/pagecontrol.css);
+@import url(css/themes/default.css);
 
 </style>
 <script type="module">
@@ -49,6 +47,27 @@ document.on("ready", function() {
     utils.focusWindow();
 
     console.log(`Universally unique identifier - ` + uuid());
+
+    document.on("click", function(event, element) {
+        const pagecontrol = document.$("pagecontrol");
+
+        switch (element.id) {
+            case "btLogin":
+                pagecontrol.showTab("tsDashboard");
+                break;
+
+            case "createAccount":
+                pagecontrol.showTab("tsSignup");
+                break;
+
+            case "forgotPassword":
+                pagecontrol.showTab("tsReset");
+                break;
+
+            default:
+
+        }
+    });
 });
 
 const headers = {
@@ -145,6 +164,42 @@ async function myfetch(url, headers, body)
     <button #httpbin>httpbin</button>
     <button #amplitude>amplitude</button>
     <button #mixpanel>mixpanel</button>
+    <pagecontrol header-position="top" header-visible="true">
+        <tab caption="login" #tsLogin selected>
+            <div .vbox>
+                <h1> Sign-in </h1>
+                <label for="email"> Username or email address </label>
+                <input type="text" #email />
+                <label for="password"> Password </label><a #forgotPassword tabindex> Forgot password? </a>
+                <input type="password" #password />
+                <button #btLogin> Login </button>
+                <p>New? <a #createAccount tabindex>Create an account</a>.</p>
+            </div>
+        </tab>
+        <tab caption="signup" #tsSignup>
+            <div .vbox>
+                <h1> Sign Up </h1>
+                <label for="email2"> Email address </label>
+                <input type="text" #email2 />
+                <label for="password2"> Password </label>
+                <input type="password" #password2 />
+                <button #signup> Sign up </button>
+            </div>
+        </tab>
+        <tab caption="reset" #tsReset>
+            <div .vbox>
+                <h1> Reset your password </h1>
+                <label for="email2"> Enter your user account's verified email address and we will send you a password reset link. </label>
+                <input type="text" #email2 />
+                <button #signup> Send password reset email </button>
+            </div>
+        </tab>
+        <tab caption="dashboard" #tsDashboard>
+            <div .vbox>
+                <h1> Your Dashboard </h1>
+            </div>
+        </tab>
+    </pagecontrol>
     <plaintext #logger readonly />
 </body>
 </html>
