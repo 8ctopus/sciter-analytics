@@ -139,6 +139,10 @@ document.on("click", function(event, element) {
             pagecontrol.showTab("tsReset");
             break;
 
+        case "reset":
+            pagecontrol.showTab("tsSent");
+            break;
+
         default:
     }
 });
@@ -196,17 +200,22 @@ async function myfetch(url, headers, body)
                 <button #signup> Sign up </button>
             </div>
         </tab>
+        <tab caption="dashboard" #tsDashboard>
+            <div .vbox>
+                <h1> Your Dashboard </h1>
+            </div>
+        </tab>
         <tab caption="reset" #tsReset>
             <div .vbox>
                 <h1> Reset your password </h1>
                 <label for="email2"> Enter your user account's verified email address and we will send you a password reset link. </label>
                 <input type="text" #email2 />
-                <button #signup> Send password reset email </button>
+                <button #reset> Send password reset email </button>
             </div>
         </tab>
-        <tab caption="dashboard" #tsDashboard>
+        <tab caption="sent" #tsSent>
             <div .vbox>
-                <h1> Your Dashboard </h1>
+                <h1> Password reset email sent! </h1>
             </div>
         </tab>
     </pagecontrol>
