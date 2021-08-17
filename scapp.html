@@ -9,6 +9,10 @@
 @import url(vendor/8ctopus/sciter-pagecontrol/src/pagecontrol.css);
 @import url(css/themes/default.css);
 
+div.vbox {
+    width: 200dip;
+}
+
 </style>
 <script type="module">
 
@@ -170,7 +174,9 @@ async function myfetch(url, headers, body)
                 <h1> Sign-in </h1>
                 <label for="email"> Username or email address </label>
                 <input type="text" #email />
-                <label for="password"> Password </label><a #forgotPassword tabindex> Forgot password? </a>
+                <div .hbox>
+                    <label for="password"> Password </label><a #forgotPassword .right tabindex> Forgot password? </a>
+                </div>
                 <input type="password" #password />
                 <button #btLogin> Login </button>
                 <p>New? <a #createAccount tabindex>Create an account</a>.</p>
