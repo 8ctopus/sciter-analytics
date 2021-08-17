@@ -19,6 +19,7 @@ div.vbox {
 import {logger} from "vendor/8ctopus/sciter-logger/src/logger.js";
 import * as utils from "vendor/8ctopus/sciter-utils/src/utils.js";
 import {uuid} from "@sciter";
+import {analytics} from "src/analytics.js";
 
 // initialize logger
 logger.init();
@@ -28,6 +29,18 @@ logger.attach();
 
 // capture unhandled exceptions
 logger.capture();
+
+// sent endpoint
+analytics.init("https://httpbin.org/post");
+
+// add more environmental variables
+analytics.env({
+    appName: "analytics",
+    appVersion: 0.0.1,
+});
+
+// watch document ready and create event
+analytics.watch("ready", null, "app started");
 
 document.on("ready", function() {
     logger.plaintext(document.$("plaintext#logger"));
@@ -51,6 +64,8 @@ document.on("ready", function() {
     utils.focusWindow();
 
     console.log(`Universally unique identifier - ` + uuid());
+
+    //analytics.watch("focus", null, "focus");
 });
 
 const headers = {
@@ -135,12 +150,24 @@ document.on("click", function(event, element) {
             pagecontrol.showTab("tsSignup");
             break;
 
+        case "btSignUp":
+            pagecontrol.showTab("tsLogin");
+            break;
+
         case "forgotPassword":
             pagecontrol.showTab("tsReset");
             break;
 
         case "reset":
             pagecontrol.showTab("tsSent");
+            break;
+
+        case "showEvents":
+            analytics.log();
+            break;
+
+        case "sendEvents":
+            analytics.send();
             break;
 
         default:
@@ -150,6 +177,35 @@ document.on("click", function(event, element) {
 // handle show tab event
 document.on("showtab", "pagecontrol", function(event, element) {
     console.debug(event.detail.tab);
+
+    switch (event.detail.tab) {
+        case "tsLogin":
+            event = "start login";
+            break;
+
+        case "tsSignup":
+            event = "start signup";
+            break;
+
+        case "tsDashboard":
+            event = "end login";
+            break;
+
+        case "tsReset":
+            event = "start reset";
+            break;
+
+        case "tsSent":
+            event = "end reset";
+            break;
+
+        default:
+    }
+
+    //console.debug(`event - ${event}`);
+
+    // log event
+    analytics.event(event);
 });
 
 async function myfetch(url, headers, body)
@@ -176,6 +232,8 @@ async function myfetch(url, headers, body)
     <button #httpbin>httpbin</button>
     <button #amplitude>amplitude</button>
     <button #mixpanel>mixpanel</button>
+    <button #showEvents>show events</button>
+    <button #sendEvents>send events</button>
     <pagecontrol header-position="top" header-visible="true">
         <tab caption="login" #tsLogin selected>
             <div .vbox>
@@ -197,7 +255,7 @@ async function myfetch(url, headers, body)
                 <input type="text" #email2 />
                 <label for="password2"> Password </label>
                 <input type="password" #password2 />
-                <button #signup> Sign up </button>
+                <button #btSignUp> Sign up </button>
             </div>
         </tab>
         <tab caption="dashboard" #tsDashboard>
