@@ -3,6 +3,10 @@
 This is a [sciter.js](https://sciter.com/) in-app analytics experiment.
 The general idea is to record what users do within the application.
 
+The app records:
+- environment variables: app name, version, operating system, ...
+- events: whatever event you want to track
+
 ## demo
 
 - git clone the repository
@@ -17,3 +21,7 @@ The general idea is to record what users do within the application.
 - https://developer.mixpanel.com/
 - https://developers.amplitude.com/docs
 - https://httpbin.org/
+
+# todo
+
+- fix uuid
