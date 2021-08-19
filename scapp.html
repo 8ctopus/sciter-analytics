@@ -30,8 +30,9 @@ logger.attach();
 // capture unhandled exceptions
 logger.capture();
 
-// sent endpoint
-analytics.init("https://httpbin.org/post");
+// set endpoint
+//analytics.init("https://httpbin.org/post");
+analytics.init("http://localhost/index.php");
 
 // add more environmental variables
 analytics.env({

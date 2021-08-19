@@ -93,7 +93,8 @@ export class analytics
         });
 
         //console.debug(body);
-        //return;
+
+        console.debug(`endpoint ${this.#endpoint}`);
 
         const response = await fetch(this.#endpoint, {
             method: "POST",
@@ -103,7 +104,11 @@ export class analytics
         });
 
         console.line();
-        console.log(`response status - ${response.status}`);
+
+        if (response.status !== 200 || !response.ok) {
+            console.error(`response status - ${response.status}`);
+            return;
+        }
 
         const json = await response.json();
 
