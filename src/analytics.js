@@ -18,9 +18,13 @@ export class analytics
     static #env;
     static #events = [];
 
-    static init(url)
+    /**
+     * Initialize
+     * @param string endpoint
+     */
+    static init(endpoint)
     {
-        this.#endpoint = url;
+        this.#endpoint = endpoint;
 
         // add environment variables
         this.#env = {
@@ -78,30 +82,6 @@ export class analytics
     //const [hours, minutes, seconds] = new Date().toLocaleTimeString("en-US").split(/:| /)
 
     /**
-     * Log environment and events
-     * @return void
-     */
-    static log()
-    {
-        // log environment
-        console.debug(this.#env);
-        /*
-        for (const key in this.#env) {
-            console.debug(`${key}: ${this.#env[key]}`);
-        }
-
-        // loop through events
-        this.#events.forEach(function(event) {
-            // log event
-            console.debug(event);
-        })
-        */
-
-        // log events
-        console.debug(this.#events);
-    }
-
-    /**
      * Send analytics to remote server
      * @return Promise
      */
@@ -129,5 +109,29 @@ export class analytics
 
         //console.log(response.text());
         console.log(json);
+    }
+
+    /**
+     * Log environment and events
+     * @return void
+     */
+    static log()
+    {
+        // log environment
+        console.debug(this.#env);
+        /*
+        for (const key in this.#env) {
+            console.debug(`${key}: ${this.#env[key]}`);
+        }
+
+        // loop through events
+        this.#events.forEach(function(event) {
+            // log event
+            console.debug(event);
+        })
+        */
+
+        // log events
+        console.debug(this.#events);
     }
 }
