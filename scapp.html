@@ -35,6 +35,7 @@ analytics.init("https://httpbin.org/post");
 
 // add more environmental variables
 analytics.env({
+    uuid: uuid(),
     appName: "analytics",
     appVersion: 0.0.1,
 });
@@ -62,8 +63,6 @@ document.on("ready", function() {
 
     // focus window
     utils.focusWindow();
-
-    console.log(`Universally unique identifier - ` + uuid());
 
     //analytics.watch("focus", null, "focus");
 });

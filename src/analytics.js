@@ -27,7 +27,6 @@ export class analytics
             device: env.DEVICE,
             platform: env.PLATFORM,
             os: env.OS,
-            uuid: uuid(),
             language: env.language(),
             country: env.country(),
             userName: env.userName(),
