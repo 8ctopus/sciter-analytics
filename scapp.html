@@ -33,33 +33,35 @@ logger.attach();
 // capture unhandled exceptions
 logger.capture();
 
-// set endpoint
-analytics.init({
-    log: true,
-    endpoint: "http://localhost/index.php",
-    //endpoint: "https://httpbin.org/post",
-});
-
-// add more environmental variables
-analytics.env({
-    name: "analytics",
-    version: "0.0.1",
-    uuid: uuid(),
-});
-
-// watch document ready and create event
-analytics.watch("close", "app closed");
-
-analytics.watch("focus", "plaintext", "plaintext clicked");
-
 document.on("ready", function() {
-    analytics.event("app started");
-
     // subscribe to logger messages
     logger.plaintext(document.$("plaintext#logger"));
 
     // log sciter version
     console.debug(utils.sciterInfo());
+
+    // initialize
+    analytics.init({
+        log: true,
+        endpoint: "http://localhost/index.php",
+        //endpoint: "https://httpbin.org/post",
+    });
+
+    // add more environmental variables
+    analytics.env({
+        name: "analytics",
+        version: "0.0.1",
+        uuid: uuid(),
+    });
+
+    analytics.event("app started");
+
+    analytics.watch("focus", "plaintext", "plaintext focused");
+    analytics.watch("focus", null, "focus");
+
+    // watch app close
+    //analytics.watch("close", "app closed");
+    //analytics.watch("closerequest", "app close request");
 
     // center window on screen
     utils.centerWindow("screen");
@@ -75,8 +77,6 @@ document.on("ready", function() {
 
     // focus window
     utils.focusWindow();
-
-    //analytics.watch("focus", null, "focus");
 });
 
 const headers = {

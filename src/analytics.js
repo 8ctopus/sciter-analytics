@@ -72,12 +72,18 @@ export class analytics
     /**
      * Watch
      * @param string event
-     * @param string(optional) selector
+     * @param string selector
      * @param string label
+     * @return bool
      */
     static watch(event, selector, label)
     {
-        if (selector !== null)
+        if (arguments.length !== 3)
+            return false;
+
+        console.debug(`${event} - ${selector} - ${label}`);
+
+        if (selector)
             document.on(event, selector, () => {
                 this.event(label);
             });
@@ -85,6 +91,8 @@ export class analytics
             document.on(event, () => {
                 this.event(label);
             });
+
+        return true;
     }
 
     //const [hours, minutes, seconds] = new Date().toLocaleTimeString("en-US").split(/:| /)
