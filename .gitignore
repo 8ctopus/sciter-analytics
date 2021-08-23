@@ -3,9 +3,8 @@
 /sciter.dll
 /spm.phar
 /spm
-
-/*.sublime-workspace
-
 /vendor/
 /docker/
 
+/*.sublime-workspace
+/test.log
