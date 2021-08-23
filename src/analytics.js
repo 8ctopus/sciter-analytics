@@ -22,6 +22,7 @@ export class analytics
     /**
      * Initialize
      * @param object options
+     * @return void
      */
     static init(options)
     {
@@ -42,6 +43,7 @@ export class analytics
     /**
      * Add environment variables
      * @param object env
+     * @return void
      */
     static env(env)
     {
@@ -54,6 +56,7 @@ export class analytics
     /**
      * Add event
      * @param string label - event label
+     * @return void
      */
     static event(label)
     {

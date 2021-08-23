@@ -22,7 +22,10 @@ import {uuid} from "@sciter";
 import {analytics} from "src/analytics.js";
 
 // initialize logger
-logger.init();
+logger.init({
+    file: URL.toPath(__DIR__ + "test.log"),
+    clear: true,
+});
 
 // attach logger to console
 logger.attach();
@@ -45,9 +48,14 @@ analytics.env({
 });
 
 // watch document ready and create event
-analytics.watch("ready", null, "app started");
+analytics.watch("close", "app closed");
+
+analytics.watch("focus", "plaintext", "plaintext clicked");
 
 document.on("ready", function() {
+    analytics.event("app started");
+
+    // subscribe to logger messages
     logger.plaintext(document.$("plaintext#logger"));
 
     // log sciter version
