@@ -74,14 +74,15 @@ export class analytics
      * @param string event
      * @param string selector
      * @param string label
-     * @return bool
+     * @return void
+     * @throws Error
      */
     static watch(event, selector, label)
     {
         if (arguments.length !== 3)
-            return false;
+            throw new Error("method requires 3 arguments");
 
-        console.debug(`${event} - ${selector} - ${label}`);
+        //console.debug(`${event} - ${selector} - ${label}`);
 
         if (selector)
             document.on(event, selector, () => {
