@@ -66,7 +66,7 @@ export class analytics
         });
 
         if (this.#log)
-            console.debug(`event - ${label}`);
+            console.log(`event - ${label}`);
     }
 
     /**
@@ -109,9 +109,11 @@ export class analytics
             events: this.#events,
         });
 
-        //console.debug(body);
 
-        console.debug(`endpoint ${this.#endpoint}`);
+        if (this.#log) {
+            console.debug(`endpoint ${this.#endpoint}`);
+            console.debug(body);
+        }
 
         const response = await fetch(this.#endpoint, {
             method: "POST",
@@ -120,8 +122,6 @@ export class analytics
             body: body,
         });
 
-        console.line();
-
         if (response.status !== 200 || !response.ok) {
             console.error(`response status - ${response.status}`);
             return;
@@ -129,8 +129,12 @@ export class analytics
 
         const json = await response.json();
 
-        //console.log(response.text());
-        console.log(json);
+        if (this.#log) {
+            console.line();
+            //console.log(response.text());
+            console.log(json);
+        }
+
     }
 
     /**
@@ -140,7 +144,8 @@ export class analytics
     static log()
     {
         // log environment
-        console.debug(this.#env);
+        console.log(this.#env);
+
         /*
         for (const key in this.#env) {
             console.debug(`${key}: ${this.#env[key]}`);
@@ -154,6 +159,6 @@ export class analytics
         */
 
         // log events
-        console.debug(this.#events);
+        console.log(this.#events);
     }
 }
