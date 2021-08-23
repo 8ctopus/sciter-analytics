@@ -9,6 +9,7 @@ import {uuid} from "@sciter";
 export class analytics
 {
     static #endpoint;
+    static #log;
 
     static #headers = {
         "Content-Type": "application/json; charset=utf-8",
@@ -20,11 +21,12 @@ export class analytics
 
     /**
      * Initialize
-     * @param string endpoint
+     * @param object options
      */
-    static init(endpoint)
+    static init(options)
     {
-        this.#endpoint = endpoint;
+        this.#endpoint = options.endpoint ?? "";
+        this.#log      = options.log ?? false;
 
         // add environment variables
         this.#env = {
@@ -59,6 +61,9 @@ export class analytics
             label: label,
             timestamp: new Date(),
         });
+
+        if (this.#log)
+            console.debug(`event - ${label}`);
     }
 
     /**

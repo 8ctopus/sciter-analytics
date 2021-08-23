@@ -31,14 +31,17 @@ logger.attach();
 logger.capture();
 
 // set endpoint
-//analytics.init("https://httpbin.org/post");
-analytics.init("http://localhost/index.php");
+analytics.init({
+    log: true,
+    endpoint: "http://localhost/index.php",
+    //endpoint: "https://httpbin.org/post",
+});
 
 // add more environmental variables
 analytics.env({
+    name: "analytics",
+    version: "0.0.1",
     uuid: uuid(),
-    appName: "analytics",
-    appVersion: "0.0.1",
 });
 
 // watch document ready and create event
