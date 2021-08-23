@@ -17,6 +17,7 @@ The app records:
 
 # endpoints to test
 
+- https://segment.com/
 - https://docs.smartlook.com/
 - https://developer.mixpanel.com/
 - https://developers.amplitude.com/docs
