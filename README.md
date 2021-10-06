@@ -26,3 +26,5 @@ The app records:
 # todo
 
 - fix uuid
+- add first endpoint
+- test fetch error management - https - server refused answer - server error
