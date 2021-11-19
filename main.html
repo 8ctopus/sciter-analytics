@@ -3,6 +3,7 @@
     window-height="800dip"
 >
 <head>
+<title>sciter analytics demo</title>
 <style>
 
 @import url(vendor/8ctopus/sciter-logger/src/logger.css);
@@ -16,10 +17,10 @@ div.vbox {
 </style>
 <script type="module">
 
+import {uuid} from "@sciter";
 import {logger} from "vendor/8ctopus/sciter-logger/src/logger.js";
 import * as utils from "vendor/8ctopus/sciter-utils/src/utils.js";
 import {dialogs} from "vendor/8ctopus/sciter-dialogs/src/dialogs.js";
-import {uuid} from "@sciter";
 import {analytics} from "src/analytics.js";
 
 // initialize logger
@@ -34,7 +35,7 @@ logger.attach();
 // capture unhandled exceptions
 logger.capture();
 
-document.on("ready", function() {
+document.ready = function() {
     // subscribe to logger messages
     logger.plaintext(document.$("plaintext#logger"));
 
@@ -77,7 +78,7 @@ document.on("ready", function() {
 
     // focus window
     utils.focusWindow();
-});
+}
 
 document.on("closerequest", function(event) {
     if (dialogs.show("question", "Are you sure you want to quit?", "yes no cancel") !== "yes") {
