@@ -13,7 +13,7 @@ The app records:
 - on Mac only `chmod +x install.sh scapp.sh`
 - run `install.bat` on Windows or `./install.sh` on Mac to download the latest sciter binaries and the sciter package manager
 - install packages `php bin/spm.phar install`
-- run `scapp.bat` or `./scapp.sh`
+- run `main.bat` or `./main.sh`
 
 # endpoints to test
 
