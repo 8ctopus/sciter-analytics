@@ -7,6 +7,8 @@ The app records:
 - environment variables: app name, version, operating system, ...
 - events: whatever event you want to track
 
+===== IT IS WORK IN PROGRESS =====
+
 ## demo
 
 - git clone the repository
