@@ -6,7 +6,7 @@
 import * as env from "@env";
 import {uuid} from "@sciter";
 
-export class analytics
+export default class Analytics
 {
     static #endpoint;
     static #log;

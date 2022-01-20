@@ -30,7 +30,6 @@ The app records:
 
 - copy the `src` dir to your project
 
-
 # endpoints to test
 
 - https://segment.com/

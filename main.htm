@@ -21,7 +21,7 @@ import {uuid} from "@sciter";
 import Logger from "node_modules/sciter-logger/src/logger.js";
 import * as Utils from "node_modules/sciter-utils/src/utils.js";
 import Dialogs from "node_modules/sciter-dialogs/src/dialogs.js";
-import {analytics} from "src/analytics.js";
+import Analytics from "src/analytics.js";
 
 // initialize logger
 Logger.init({
@@ -43,26 +43,26 @@ document.ready = function() {
     console.debug(Utils.sciterInfo());
 
     // initialize
-    analytics.init({
+    Analytics.init({
         log: true,
         endpoint: "http://localhost/index.php",
         //endpoint: "https://httpbin.org/post",
     });
 
     // add more environmental variables
-    analytics.env({
+    Analytics.env({
         name: "analytics",
         version: "0.0.1",
         uuid: uuid(),
     });
 
-    analytics.event("app started");
+    Analytics.event("app started");
 
-    analytics.watch("focus", "plaintext", "plaintext focused");
-    analytics.watch("focus", null, "focus");
+    Analytics.watch("focus", "plaintext", "plaintext focused");
+    Analytics.watch("focus", null, "focus");
 
     // watch app close
-    analytics.watch("closerequest", null, "app close request");
+    Analytics.watch("closerequest", null, "app close request");
 
     // add support for F5 reload
     Utils.addReloadWindow();
@@ -84,7 +84,7 @@ document.on("closerequest", function(event) {
         return;
     }
 
-    analytics.event("app closed");
+    Analytics.event("app closed");
 });
 
 const headers = {
@@ -182,11 +182,11 @@ document.on("click", function(event, element) {
             break;
 
         case "showEvents":
-            analytics.log();
+            Analytics.log();
             break;
 
         case "sendEvents":
-            analytics.send();
+            Analytics.send();
             break;
 
         default:
@@ -224,7 +224,7 @@ document.on("showtab", "pagecontrol", function(event, element) {
     //console.debug(`event - ${event}`);
 
     // log event
-    analytics.event(event);
+    Analytics.event(event);
 });
 
 async function myfetch(url, headers, body)
