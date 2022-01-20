@@ -35,7 +35,7 @@ Logger.attach();
 // capture unhandled exceptions
 Logger.capture();
 
-document.ready = function() {
+document.on("ready", function() {
     // subscribe to logger messages
     Logger.plaintext(document.$("plaintext#logger"));
 
@@ -75,7 +75,7 @@ document.ready = function() {
 
     // bring window to front and set input focus
     Window.this.activate(true);
-}
+});
 
 document.on("closerequest", function(event) {
     if (Dialogs.show("question", "Are you sure you want to quit?", "yes no cancel") !== "yes") {
