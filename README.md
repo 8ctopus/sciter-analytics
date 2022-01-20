@@ -30,6 +30,44 @@ The app records:
 
 - copy the `src` dir to your project
 
+Add to your project
+
+```js
+<script type="module">
+
+// import from node
+import Analytics from "node_modules/sciter-analytics/src/analytics.js";
+
+// import from src
+import Analytics from "src/analytics.js";
+
+// initialize
+Analytics.init({
+    log: true,
+    endpoint: "http://localhost/index.php",
+    //endpoint: "https://httpbin.org/post",
+});
+
+// add more environmental variables
+Analytics.env({
+    name: "my app name",
+    version: "0.0.1",
+    uuid: uuid(),
+});
+
+// log event
+Analytics.event("app started");
+
+// watch
+Analytics.watch("focus", "plaintext", "plaintext focused");
+
+// log what happened
+Analytics.log();
+
+// send data
+Analytics.send();
+```
+
 # endpoints to test
 
 - https://segment.com/
