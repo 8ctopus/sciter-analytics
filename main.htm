@@ -59,10 +59,10 @@ document.on("ready", function() {
     Analytics.event("app started");
 
     Analytics.watch("focus", "plaintext", "plaintext focused");
-    Analytics.watch("focus", null, "focus");
+    Analytics.watch("focus", undefined, "focus");
 
     // watch app close
-    Analytics.watch("closerequest", null, "app close request");
+    Analytics.watch("closerequest", undefined, "app close request");
 
     // add support for F5 reload
     Utils.addReloadWindow();
@@ -108,36 +108,36 @@ document.on("click", "button#amplitude", function() {
     const url = "https://api2.amplitude.com/2/httpapi";
 
     const body = JSON.stringify({
-      "api_key": "my_amplitude_api_key",
-      "events": [{
-          "user_id": "datamonster@gmail.com",
-          "device_id": "C8F9E604-F01A-4BD9-95C6-8E5357DF265D",
-          "event_type": "watch_tutorial",
-          "time": 1396381378123,
-          "event_properties": {
-            "load_time": 0.8371,
-            "source": "notification",
-            "dates": [
-              "monday",
-              "tuesday"
-            ]
-          },
-          "app_version": "2.1.3",
-          "platform": "iOS",
-          "os_name": "Android",
-          "os_version": "4.2.2",
-          "device_brand": "Verizon",
-          "device_manufacturer": "Apple",
-          "device_model": "iPhone 9,1",
-          "carrier": "Verizon",
-          "country": "United States",
-          "region": "California",
-          "city": "San Francisco",
-          "dma": "San Francisco-Oakland-San Jose, CA",
-          "language": "English",
-          "ip": "127.0.0.1",
-        }
-      ]
+        "api_key": "my_amplitude_api_key",
+        "events": [{
+            "user_id": "datamonster@gmail.com",
+            "device_id": "C8F9E604-F01A-4BD9-95C6-8E5357DF265D",
+            "event_type": "watch_tutorial",
+            "time": 1396381378123,
+            "event_properties": {
+                "load_time": 0.8371,
+                "source": "notification",
+                "dates": [
+                    "monday",
+                    "tuesday",
+                ],
+            },
+            "app_version": "2.1.3",
+            "platform": "iOS",
+            "os_name": "Android",
+            "os_version": "4.2.2",
+            "device_brand": "Verizon",
+            "device_manufacturer": "Apple",
+            "device_model": "iPhone 9,1",
+            "carrier": "Verizon",
+            "country": "United States",
+            "region": "California",
+            "city": "San Francisco",
+            "dma": "San Francisco-Oakland-San Jose, CA",
+            "language": "English",
+            "ip": "127.0.0.1",
+        },
+        ],
     });
 
     myfetch(url, headers, body);
@@ -151,7 +151,7 @@ document.on("click", "button#mixpanel", function() {
         "properties": {
             "distinct_id": "13793",
             "token": "YOUR_PROJECT_TOKEN",
-        }
+        },
     });
 
     myfetch(url, headers, body);
@@ -227,8 +227,7 @@ document.on("showtab", "pagecontrol", function(event, element) {
     Analytics.event(event);
 });
 
-async function myfetch(url, headers, body)
-{
+async function myfetch(url, headers, body) {
     const response = await fetch(url, {
         method: "POST",
         cache: "no-cache",
@@ -243,17 +242,6 @@ async function myfetch(url, headers, body)
 
     //console.log(response.text());
     console.log(json);
-}
-
-/**
- * Unhandled exception handler
- * @param  Error|String e
- * @return void
- */
-function unhandledExceptionHandler(e)
-{
-    // log exception using exception if it exists, error otherwise
-    typeof console.exception === "function" ? console.exception(e) : console.error(e);
 }
 
 </script>
