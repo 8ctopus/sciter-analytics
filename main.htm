@@ -6,8 +6,8 @@
 <title>sciter analytics demo</title>
 <style>
 
-@import url(vendor/8ctopus/sciter-logger/src/logger.css);
-@import url(vendor/8ctopus/sciter-pagecontrol/src/pagecontrol.css);
+@import url(node_modules/sciter-logger/src/logger.css);
+@import url(node_modules/sciter-pagecontrol/src/pagecontrol.css);
 @import url(css/themes/default.css);
 
 div.vbox {
@@ -18,29 +18,29 @@ div.vbox {
 <script type="module">
 
 import {uuid} from "@sciter";
-import {logger} from "vendor/8ctopus/sciter-logger/src/logger.js";
-import * as utils from "vendor/8ctopus/sciter-utils/src/utils.js";
-import {dialogs} from "vendor/8ctopus/sciter-dialogs/src/dialogs.js";
+import Logger from "node_modules/sciter-logger/src/logger.js";
+import * as Utils from "node_modules/sciter-utils/src/utils.js";
+import Dialogs from "node_modules/sciter-dialogs/src/dialogs.js";
 import {analytics} from "src/analytics.js";
 
 // initialize logger
-logger.init({
+Logger.init({
     file: URL.toPath(__DIR__ + "test.log"),
     clear: true,
 });
 
 // attach logger to console
-logger.attach();
+Logger.attach();
 
 // capture unhandled exceptions
-logger.capture(unhandledExceptionHandler);
+Logger.capture();
 
 document.ready = function() {
     // subscribe to logger messages
-    logger.plaintext(document.$("plaintext#logger"));
+    Logger.plaintext(document.$("plaintext#logger"));
 
     // log sciter version
-    console.debug(utils.sciterInfo());
+    console.debug(Utils.sciterInfo());
 
     // initialize
     analytics.init({
@@ -65,23 +65,20 @@ document.ready = function() {
     analytics.watch("closerequest", null, "app close request");
 
     // add support for F5 reload
-    utils.addReloadWindow();
+    Utils.addReloadWindow();
 
     // close window on escape key press
-    utils.closeWindowOnEscape(Window.this);
+    Utils.closeWindowOnEscape(Window.this);
 
     // center window on screen
-    utils.centerWindow(Window.this, "screen");
-
-    // bring window to front
-    //utils.windowToFront(Window.this);
+    Utils.centerWindow(Window.this, "screen");
 
     // bring window to front and set input focus
     Window.this.activate(true);
 }
 
 document.on("closerequest", function(event) {
-    if (dialogs.show("question", "Are you sure you want to quit?", "yes no cancel") !== "yes") {
+    if (Dialogs.show("question", "Are you sure you want to quit?", "yes no cancel") !== "yes") {
         // cancel close
         event.preventDefault();
         return;
