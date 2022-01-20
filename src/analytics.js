@@ -4,10 +4,8 @@
  */
 
 import * as env from "@env";
-import {uuid} from "@sciter";
 
-export default class Analytics
-{
+export default class Analytics {
     static #endpoint;
     static #log;
 
@@ -21,13 +19,11 @@ export default class Analytics
 
     /**
      * Initialize
-     * @param object options
-     * @return void
+     * @param {object} options
      */
-    static init(options)
-    {
+    static init(options) {
         this.#endpoint = options.endpoint ?? "";
-        this.#log      = options.log ?? false;
+        this.#log = options.log ?? false;
 
         // add environment variables
         this.#env = {
@@ -42,24 +38,20 @@ export default class Analytics
 
     /**
      * Add environment variables
-     * @param object env
-     * @return void
+     * @param {object} environment
      */
-    static env(env)
-    {
+    static env(environment) {
         this.#env = {
             ...this.#env,
-            ...env,
-        }
+            ...environment,
+        };
     }
 
     /**
      * Add event
-     * @param string label - event label
-     * @return void
+     * @param {string} label - event label
      */
-    static event(label)
-    {
+    static event(label) {
         this.#events.push({
             label: label,
             timestamp: new Date(),
@@ -71,27 +63,28 @@ export default class Analytics
 
     /**
      * Watch
-     * @param string event
-     * @param string selector
-     * @param string label
-     * @return void
+     * @param {string} event
+     * @param {string} selector
+     * @param {string} label
+     * @returns {boolean}
      * @throws Error
      */
-    static watch(event, selector, label)
-    {
+    static watch(event, selector, label) {
         if (arguments.length !== 3)
             throw new Error("method requires 3 arguments");
 
         //console.debug(`${event} - ${selector} - ${label}`);
 
-        if (selector)
+        if (selector) {
             document.on(event, selector, () => {
                 this.event(label);
             });
-        else
+        }
+        else {
             document.on(event, () => {
                 this.event(label);
             });
+        }
 
         return true;
     }
@@ -100,10 +93,9 @@ export default class Analytics
 
     /**
      * Send analytics to remote server
-     * @return Promise
+     * @returns {Promise}
      */
-    static async send()
-    {
+    static async send() {
         const body = JSON.stringify({
             env: this.#env,
             events: this.#events,
@@ -134,15 +126,12 @@ export default class Analytics
             //console.log(response.text());
             console.log(json);
         }
-
     }
 
     /**
      * Log environment and events
-     * @return void
      */
-    static log()
-    {
+    static log() {
         // log environment
         console.log(this.#env);
 
