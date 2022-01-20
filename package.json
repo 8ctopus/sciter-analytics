@@ -1,6 +1,6 @@
 {
   "name": "sciter-analytics",
-  "version": "0.1.5",
+  "version": "0.2.0",
   "description": "This is a [sciter.js](https://sciter.com/) in-app analytics experiment. The general idea is to record what users do within the application.",
   "scripts": {
     "install-sdk": "node ./node_modules/sciter-sandbox/scripts/install.mjs cleanup",
