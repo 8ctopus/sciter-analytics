@@ -53,7 +53,7 @@ export default class Analytics {
      */
     static event(label) {
         this.#events.push({
-            label: label,
+            label,
             timestamp: new Date(),
         });
 
@@ -101,7 +101,6 @@ export default class Analytics {
             events: this.#events,
         });
 
-
         if (this.#log) {
             console.debug(`endpoint ${this.#endpoint}`);
             console.debug(body);
@@ -111,7 +110,7 @@ export default class Analytics {
             method: "POST",
             cache: "no-cache",
             headers: this.#headers,
-            body: body,
+            body,
         });
 
         if (response.status !== 200 || !response.ok) {
