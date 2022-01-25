@@ -32,11 +32,9 @@ The app records:
 
 - copy the `src` dir to your project
 
-Add to your project
+Add to your project inside `<script type="module">`
 
-```html
-<script type="module">
-
+```js
 // import from node
 import Analytics from "node_modules/sciter-analytics/src/analytics.js";
 
