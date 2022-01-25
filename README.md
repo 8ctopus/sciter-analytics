@@ -35,7 +35,7 @@ The app records:
 Add to your project inside `<script type="module">`
 
 ```js
-// import from node
+// import using npm
 import Analytics from "node_modules/sciter-analytics/src/analytics.js";
 
 // import from src
