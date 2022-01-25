@@ -34,7 +34,7 @@ The app records:
 
 Add to your project
 
-```js
+```html
 <script type="module">
 
 // import from node
