@@ -47,6 +47,9 @@ export default class Analytics {
         this.#log = options.log ?? false;
     }
 
+    /** Set device info
+     * @param {object} device info - device_model, platform, os_version, device_id
+    */
     static device(deviceInfo) {
         this.#device = {
             ...deviceInfo
@@ -70,12 +73,12 @@ export default class Analytics {
     /**
      * Add event
      * @param {string} label - event label
+     * @param {object} event properties
      */
-    static event(label) {
-
+    static event(label, event_properties) {
         this.#events.push({
             ...this.#device,
-            ...this.#event_properties,
+            event_properties: {...this.#event_properties, ...event_properties},
             user_id: this.#user_id,
             event_type: label,
             time: Math.round(Date.now() / 1000)
@@ -100,15 +103,15 @@ export default class Analytics {
      * @returns {boolean}
      * @throws Error
      */
-    static watch(event, selector, label) {
-        if (arguments.length !== 3)
+    static watch(event, selector, label, event_properties) {
+        if (arguments.length < 3)
             throw new Error("method requires 3 arguments");
 
-        console.log(`${event} - ${selector} - ${label}`);
+        //console.log(`${event} - ${selector} - ${label}`);
 
         if (selector) {
             document.on(event, selector, () => {
-                this.event(label);
+                this.event(label, event_properties);
                 console.log(`${event} - ${selector} - ${label}`);
             });
         }
@@ -139,7 +142,7 @@ export default class Analytics {
 
         if (this.#log) {
             console.debug(`endpoint ${this.#endpoint}`);
-            console.debug(body);
+            console.debug(this.#events);
         }
 
         const response = await fetch(this.#endpoint, {
