@@ -7,6 +7,13 @@ import * as env from "@env";
 
 export default class Analytics {
     static #endpoint;
+    static #api_key;
+    static #user_id;
+
+    static #device = [];
+
+    static #event_properties = [];
+
     static #log;
 
     static #headers = {
@@ -23,8 +30,10 @@ export default class Analytics {
      */
     static init(options) {
         this.#endpoint = options.endpoint ?? "";
-        this.#log = options.log ?? false;
-
+        this.#api_key = options.apikey ?? "";
+        this.#user_id = options.user_id ?? "";
+        this.#event_properties = options.event_properties ?? [];
+        
         // add environment variables
         this.#env = {
             device: env.DEVICE,
@@ -34,6 +43,17 @@ export default class Analytics {
             country: env.country(),
             userName: env.userName(),
         };
+
+        this.#log = options.log ?? false;
+    }
+
+    static device(deviceInfo) {
+        this.#device = {
+            ...deviceInfo
+        }
+
+        if (this.#log)
+            console.log(`device - ${this.#device}`);
     }
 
     /**
@@ -52,6 +72,15 @@ export default class Analytics {
      * @param {string} label - event label
      */
     static event(label) {
+
+        this.#events.push({
+            ...this.#device,
+            ...this.#event_properties,
+            user_id: this.#user_id,
+            event_type: label,
+            time: Math.round(Date.now() / 1000)
+        });
+        /**
         this.#events.push({
             label,
             timestamp: new Date(),
@@ -59,6 +88,8 @@ export default class Analytics {
 
         if (this.#log)
             console.log(`event - ${label}`);
+
+        */
     }
 
     /**
@@ -73,18 +104,21 @@ export default class Analytics {
         if (arguments.length !== 3)
             throw new Error("method requires 3 arguments");
 
-        //console.debug(`${event} - ${selector} - ${label}`);
+        console.log(`${event} - ${selector} - ${label}`);
 
         if (selector) {
             document.on(event, selector, () => {
                 this.event(label);
+                console.log(`${event} - ${selector} - ${label}`);
             });
         }
+       /**
         else {
             document.on(event, () => {
                 this.event(label);
             });
         }
+        */
 
         return true;
     }
@@ -97,7 +131,9 @@ export default class Analytics {
      */
     static async send() {
         const body = JSON.stringify({
-            env: this.#env,
+            api_key: this.#api_key,
+
+    //      env: this.#env,
             events: this.#events,
         });
 
