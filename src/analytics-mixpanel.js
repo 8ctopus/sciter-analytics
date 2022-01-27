@@ -7,11 +7,17 @@ import * as env from "@env";
 
 export default class AnalyticsMixPanel {
     static #endpoint;
+
+    // unique id to identify user
     static #distinct_id;
+
+    // project token
     static #token;
 
+    // device info
     static #device = [];
 
+    // event subproperties
     static #event_properties = [];
 
     static #log;
@@ -22,16 +28,20 @@ export default class AnalyticsMixPanel {
     };
 
     static #env;
+
+     events stack
     static #events = [];
 
     /**
      * Initialize
-     * @param {object} options
+     * @param {object} options - endpoint, token, distinct_id
      */
     static init(options) {
         this.#endpoint = options.endpoint ?? "";
         this.#token = options.token ?? "";
         this.#distinct_id = options.distinct_id ?? "";
+
+        // keep this as they have to be specify in each request to mixpanel
         this.#event_properties = {token: this.#token, distinct_id: this.#distinct_id};
 
         this.#log = options.log ?? false;
@@ -63,7 +73,7 @@ export default class AnalyticsMixPanel {
     /**
      * Add event
      * @param {string} label - event label
-     * @param {object} event properties
+     * @param {object} event_properties - subproperties of the event
      */
     static event(label, event_properties) {
         this.#events.push({
@@ -79,15 +89,14 @@ export default class AnalyticsMixPanel {
      * Watch
      * @param {string} event
      * @param {string} selector
-     * @param {string} label
+     * @param {string} label - event label
+     * @param {object} event_properties - event subproperties
      * @returns {boolean}
-     * @throws Error
      */
     static watch(event, selector, label, event_properties) {
-        if (arguments.length < 3)
-            throw new Error("method requires 3 arguments");
 
-        //console.log(`${event} - ${selector} - ${label}`);
+        if (this.#log)
+            console.log(`${event} - ${selector} - ${label} - ${event_properties}`);
 
         if (selector) {
             document.on(event, selector, () => {
@@ -95,18 +104,14 @@ export default class AnalyticsMixPanel {
                 console.log(`${event} - ${selector} - ${label}`);
             });
         }
-        /**
         else {
             document.on(event, () => {
-                this.event(label);
+                this.event(label, event_properties);
             });
         }
-        */
 
         return true;
     }
-
-    //const [hours, minutes, seconds] = new Date().toLocaleTimeString("en-US").split(/:| /)
 
     /**
      * Send analytics to remote server
@@ -139,7 +144,6 @@ export default class AnalyticsMixPanel {
 
         if (this.#log) {
             console.line();
-            //console.log(response.text());
             console.log(json);
         }
     }

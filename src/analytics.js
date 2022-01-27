@@ -18,7 +18,7 @@ export default class Analytics {
 
     static #headers = {
         "Content-Type": "application/json; charset=utf-8",
-        "Accept": "*/*",
+        Accept: "*/*",
     };
 
     static #env;
@@ -33,7 +33,7 @@ export default class Analytics {
         this.#api_key = options.apikey ?? "";
         this.#user_id = options.user_id ?? "";
         this.#event_properties = options.event_properties ?? [];
-        
+
         // add environment variables
         this.#env = {
             device: env.DEVICE,
@@ -52,8 +52,8 @@ export default class Analytics {
     */
     static device(deviceInfo) {
         this.#device = {
-            ...deviceInfo
-        }
+            ...deviceInfo,
+        };
 
         if (this.#log)
             console.log(`device - ${this.#device}`);
@@ -81,7 +81,7 @@ export default class Analytics {
             event_properties: {...this.#event_properties, ...event_properties},
             user_id: this.#user_id,
             event_type: label,
-            time: Math.round(Date.now() / 1000)
+            time: Math.round(Date.now() / 1000),
         });
         /**
         this.#events.push({
@@ -115,7 +115,7 @@ export default class Analytics {
                 console.log(`${event} - ${selector} - ${label}`);
             });
         }
-       /**
+        /**
         else {
             document.on(event, () => {
                 this.event(label);
@@ -136,7 +136,7 @@ export default class Analytics {
         const body = JSON.stringify({
             api_key: this.#api_key,
 
-    //      env: this.#env,
+            //      env: this.#env,
             events: this.#events,
         });
 
