@@ -21,7 +21,12 @@ import {uuid} from "@sciter";
 import Logger from "node_modules/sciter-logger/src/logger.js";
 import * as Utils from "node_modules/sciter-utils/src/utils.js";
 import Dialogs from "node_modules/sciter-dialogs/src/dialogs.js";
+
+// Amplitude analytics
 import Analytics from "src/analytics.js";
+
+// mixpanel analytics
+import AnalyticsMixPanel from "src/analytics-mixpanel.js";
 
 // initialize logger
 Logger.init({
@@ -42,40 +47,48 @@ document.on("ready", function() {
     // log sciter version
     console.debug(Utils.sciterInfo());
 
+
+    /** 
+    * Amplitude Test Section
+    */
     // initialize
     Analytics.init({
         log: true,
         endpoint: "https://api2.amplitude.com/2/httpapi",
         apikey: "0fad02b65a75f270c199db6b920fbf92",
         user_id: "123456",
-        event_properties: {appName: "Sciter analytics", appRelease: "debug"}
-        //endpoint: "http://localhost/index.php",
-        //endpoint: "https://httpbin.org/post",
+        event_properties: {appName: "Sciter analytics", appRelease: "debug"},
     });
 
     // set device info
-    Analytics.device({device_model : "iPhone 11", platform: "iOS", os_version: "15,4", device_id: "6666ABC"});
-
-
-    // add more environmental variables
-/**
-    Analytics.env({
-        api_key: "0fad02b65a75f270c199db6b920fbf92",
-        name: "analytics",
-        version: "0.0.1",
-        uuid: uuid(),
-    });
-*/
+    Analytics.device({device_model: "iPhone 11", platform: "iOS", os_version: "15,4", device_id: "6666ABC"});
 
     Analytics.event("app started");
 
- //   Analytics.watch("focus", "plaintext", "plaintext focused");
- //   Analytics.watch("focus", undefined, "focus");
-
     // watch app install click
     Analytics.watch("click", "#installCTP", "Install", {installed_app_name: "CopyTrans Photo"});
-    Analytics.watch("click", "#installCT",  "Install CT");
-    Analytics.watch("click", "#installCTBE","Install CTBE");
+    Analytics.watch("click", "#installCT", "Install CT", {installed_app_name: "CopyTrans"});
+    Analytics.watch("click", "#installCTBE", "Install CTBE", {installed_app_name: "CopyTrans Backup Explorer"});
+
+
+    /**
+    * Mixpanel Test Section 
+    */ 
+
+    AnalyticsMixPanel.init({
+        log: true,
+        endpoint: "https://api.mixpanel.com/track",
+        token: "90063d16f08d604ae6f499ba9c689982",
+        distinct_id: Math.random() * (66666 - 13730) + 13730,
+    });
+
+    AnalyticsMixPanel.event("app started");
+
+    // watch app install click
+    AnalyticsMixPanel.watch("click", "#installCTP", "Install", {installed_app_name: "CopyTrans Photo"});
+    AnalyticsMixPanel.watch("click", "#installCT", "Install", {installed_app_name: "CopyTrans"});
+    AnalyticsMixPanel.watch("click", "#installCTBE", "Install", {installed_app_name: "CopyTrans Backup Explorer"});
+
 
     // watch app close
     Analytics.watch("closerequest", undefined, "app close request");
@@ -105,7 +118,7 @@ document.on("closerequest", function(event) {
 
 const headers = {
     "Content-Type": "application/json; charset=utf-8",
-    "Accept": "*/*",
+    Accept: "*/*",
 };
 
 document.on("click", "button#httpbin", function() {
@@ -150,17 +163,18 @@ document.on("click", "button#amplitude", function() {
     myfetch(url, headers, body);
 });
 
-document.on("click", "button#mixpanel", function() {
+document.on("click", "button#testmixpanel", function() {
     const url = "https://api.mixpanel.com/track";
 
-    const body = JSON.stringify({
-        event: "Signed up",
-        properties: {
-            distinct_id: "13793",
-            token: "90063d16f08d604ae6f499ba9c689982",
-        },
+    const body = "data=" + JSON.stringify({
+            event: "Signed up",
+            properties: {
+                distinct_id: "13793",
+                token: "90063d16f08d604ae6f499ba9c689982",
+            }
     });
 
+    console.debug(body);
     myfetch(url, headers, body);
 });
 
@@ -192,8 +206,12 @@ document.on("click", function(event, element) {
             Analytics.log();
             break;
 
-        case "sendEvents":
+        case "sendEventsAmplitude":
             Analytics.send();
+            break;
+
+        case "sendEventsMixpanel":
+            AnalyticsMixPanel.send();
             break;
 
         default:
@@ -254,11 +272,10 @@ async function myfetch(url, headers, body) {
 </script>
 </head>
 <body>
-    <button #httpbin>httpbin</button>
-    <button #amplitude>amplitude</button>
-    <button #mixpanel>mixpanel</button>
+    <button #testmixpanel>test mixpanel</button>
     <button #showEvents>show events</button>
-    <button #sendEvents>send events</button>
+    <button #sendEventsAmplitude>send events Amplitude</button>
+    <button #sendEventsMixpanel>send events Mixpanel</button>
     <pagecontrol header-position="top" header-visible="true">
         <tab caption="login" #tsLogin selected>
             <div .vbox>
