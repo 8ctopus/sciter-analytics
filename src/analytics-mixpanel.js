@@ -6,19 +6,18 @@
 import * as env from "@env";
 
 export default class AnalyticsMixPanel {
-    static #endpoint;
+    
+    // track endpoint
+    static #endpoint = "https://api.mixpanel.com/track";
+
+    // user endpoint
+    static #userendpoint = "https://api.mixpanel.com/engage#profile-set";
 
     // unique id to identify user
     static #distinct_id;
 
     // project token
     static #token;
-
-    // device info
-    static #device = [];
-
-    // event subproperties
-    static #event_properties = [];
 
     static #log;
 
@@ -29,34 +28,44 @@ export default class AnalyticsMixPanel {
 
     static #env;
 
-     events stack
+    //events stack
     static #events = [];
+
+    // event subproperties
+    static #event_properties = [];
+
+    // user profile properties stack
+    static #user_profile = [];
+    static #user_profile_set = [];
 
     /**
      * Initialize
-     * @param {object} options - endpoint, token, distinct_id
+     * @param {object} options - token, distinct_id
      */
     static init(options) {
-        this.#endpoint = options.endpoint ?? "";
         this.#token = options.token ?? "";
         this.#distinct_id = options.distinct_id ?? "";
 
         // keep this as they have to be specify in each request to mixpanel
         this.#event_properties = {token: this.#token, distinct_id: this.#distinct_id};
 
+        // prepare the user profil stack with approriate tokens
+        this.#user_profile = {$token: this.#token, $distinct_id: this.#distinct_id, $ip: "192.168.1.1"};
+
         this.#log = options.log ?? false;
     }
 
-    /** Set device info
-     * @param {object} device info - device_model, platform, os_version, device_id
-    */
-    static device(deviceInfo) {
-        this.#device = {
-            ...deviceInfo,
-        };
+    /**
+    * Set user profile properties
+    * @params {user_properties} - properties to add
+    * @note this function overrides properties  
+    */ 
+    static setuserprofile(user_properties) {
 
+        this.#user_profile_set = user_properties;
+     
         if (this.#log)
-            console.log(`device - ${this.#device}`);
+            console.log(`properties - ${user_properties}`);
     }
 
     /**
@@ -96,7 +105,7 @@ export default class AnalyticsMixPanel {
     static watch(event, selector, label, event_properties) {
 
         if (this.#log)
-            console.log(`${event} - ${selector} - ${label} - ${event_properties}`);
+            console.log(`${event} - ${selector} - ${label} - ` + JSON.stringify(event_properties));
 
         if (selector) {
             document.on(event, selector, () => {
@@ -114,18 +123,24 @@ export default class AnalyticsMixPanel {
     }
 
     /**
-     * Send analytics to remote server
+     * Send all analytics (event & user profile) to mixpanel
      * @returns {Promise}
      */
     static async send() {
+        this.senduserprofile();
+        this.sendevent();
+    }
 
+    static async sendevent() {
         const body = "data=" + JSON.stringify(
             this.#events,
         );
 
         if (this.#log) {
+            console.line();
+            console.log('sending events');
             console.debug(`endpoint ${this.#endpoint}`);
-            console.debug("data=" + body);
+            console.debug(body);
         }
 
         const response = await fetch(this.#endpoint, {
@@ -136,6 +151,38 @@ export default class AnalyticsMixPanel {
         });
 
         if (response.status !== 200 || !response.ok) {
+            console.error(`response status - ${response.status}`);
+            return;
+        }
+
+        const json = await response.json();
+
+        if (this.#log) {
+            console.line();
+            console.log(json);
+        }
+    }
+
+    static async senduserprofile() {
+
+        const tmp = {...this.#user_profile, $set: this.#user_profile_set};
+        const data = "data=" + JSON.stringify([tmp]);
+
+        if (this.#log) {
+            console.line();
+            console.log('sending user profile');
+            console.debug(`endpoint ${this.#userendpoint}`);
+            console.debug(data);
+        }
+
+        const response = await fetch(this.#userendpoint, {
+            method: "POST",
+            cache: "no-cache",
+            headers: this.#headers,
+            data
+        });
+
+        if (response.status !== 200) {
             console.error(`response status - ${response.status}`);
             return;
         }
