@@ -70,6 +70,9 @@ document.on("ready", function() {
     Analytics.watch("click", "#installCT", "Install CT", {installed_app_name: "CopyTrans"});
     Analytics.watch("click", "#installCTBE", "Install CTBE", {installed_app_name: "CopyTrans Backup Explorer"});
 
+    // watch app close
+    Analytics.watch("closerequest", undefined, "app close request");
+
 
     /**
     * Mixpanel Test Section 
@@ -79,7 +82,7 @@ document.on("ready", function() {
         log: true,
         endpoint: "https://api.mixpanel.com/track",
         token: "90063d16f08d604ae6f499ba9c689982",
-        distinct_id: Math.random() * (66666 - 13730) + 13730,
+        distinct_id: "id" + Math.floor(Math.random() * (66666 - 13730) + 13730),
     });
 
     AnalyticsMixPanel.event("app started");
@@ -89,9 +92,19 @@ document.on("ready", function() {
     AnalyticsMixPanel.watch("click", "#installCT", "Install", {installed_app_name: "CopyTrans"});
     AnalyticsMixPanel.watch("click", "#installCTBE", "Install", {installed_app_name: "CopyTrans Backup Explorer"});
 
+    // add user profile set
+    AnalyticsMixPanel.userprofileset({
+        // reserved properties
+        $name: "Marc", 
+        $email: "foo@foo.com",
+        $country_code: "RU", 
+        $region: "Vladi", 
+        $city: "Ekat", 
+        // custom properties
+        Address: "machin truc", 
+        Birthday: "1987-02-11"
+    });
 
-    // watch app close
-    Analytics.watch("closerequest", undefined, "app close request");
 
     // add support for F5 reload
     Utils.addReloadWindow();
@@ -107,11 +120,13 @@ document.on("ready", function() {
 });
 
 document.on("closerequest", function(event) {
+    /**
     if (Dialogs.show("question", "Are you sure you want to quit?", "yes no cancel") !== "yes") {
         // cancel close
         event.preventDefault();
         return;
     }
+    */
 
     Analytics.event("app closed");
 });
@@ -210,7 +225,11 @@ document.on("click", function(event, element) {
             Analytics.send();
             break;
 
-        case "sendEventsMixpanel":
+        case "sendUserMixpanel":
+            AnalyticsMixPanel.senduserprofile();
+            break;
+
+        case "sendALLMixpanel":
             AnalyticsMixPanel.send();
             break;
 
@@ -275,7 +294,8 @@ async function myfetch(url, headers, body) {
     <button #testmixpanel>test mixpanel</button>
     <button #showEvents>show events</button>
     <button #sendEventsAmplitude>send events Amplitude</button>
-    <button #sendEventsMixpanel>send events Mixpanel</button>
+    <button #sendUserMixpanel>send User Mixpanel</button>
+    <button #sendALLMixpanel>send ALL Mixpanel</button>
     <pagecontrol header-position="top" header-visible="true">
         <tab caption="login" #tsLogin selected>
             <div .vbox>
