@@ -10,8 +10,8 @@ export default class AnalyticsMixPanel {
     // track endpoint
     static #endpoint = "https://api.mixpanel.com/track";
 
-    // user endpoint
-    static #userendpoint = "https://api.mixpanel.com/engage#profile-set";
+    // user profile endpoint
+    static #userendpoint = "https://api.mixpanel.com/engage";
 
     // unique id to identify user
     static #distinct_id;
@@ -19,7 +19,17 @@ export default class AnalyticsMixPanel {
     // project token
     static #token;
 
-    static #log;
+    //events stack
+    static #events = [];
+
+    // event subproperties stack
+    static #event_properties = [];
+
+    // user profile stack
+    static #user_profile = [];
+
+    // user profile subproperties stack
+    static #user_profile_set = [];
 
     static #headers = {
         "Content-Type": "application/x-www-form-urlencoded",
@@ -27,16 +37,7 @@ export default class AnalyticsMixPanel {
     };
 
     static #env;
-
-    //events stack
-    static #events = [];
-
-    // event subproperties
-    static #event_properties = [];
-
-    // user profile properties stack
-    static #user_profile = [];
-    static #user_profile_set = [];
+    static #log;
 
     /**
      * Initialize
@@ -50,17 +51,31 @@ export default class AnalyticsMixPanel {
         this.#event_properties = {token: this.#token, distinct_id: this.#distinct_id};
 
         // prepare the user profil stack with approriate tokens
-        this.#user_profile = {$token: this.#token, $distinct_id: this.#distinct_id, $ip: "192.168.1.1"};
+        this.#user_profile = {$token: this.#token, $distinct_id: this.#distinct_id};
 
         this.#log = options.log ?? false;
     }
 
     /**
-    * Set user profile properties
+    * Add user profile properties
     * @params {user_properties} - properties to add
     * @note this function overrides properties  
     */ 
-    static setuserprofile(user_properties) {
+    static userprofile(user_profile) {
+
+        this.#user_profile = {...this.#user_profile, ...user_profile};
+     
+        if (this.#log)
+            console.log(`user profile - ${this.#user_profile}`);
+    }
+
+
+    /**
+    * Add user profile properties
+    * @params {user_properties} - properties to add. Can have any key. Reserved keys are: $name, $email, $country_code, $region, $city
+    * @note this function overrides properties  
+    */ 
+    static userprofileset(user_properties) {
 
         this.#user_profile_set = user_properties;
      
@@ -131,6 +146,10 @@ export default class AnalyticsMixPanel {
         this.sendevent();
     }
 
+    /**
+     * Send events to mixpanel
+     * @returns {Promise}
+     */
     static async sendevent() {
         const body = "data=" + JSON.stringify(
             this.#events,
@@ -163,10 +182,15 @@ export default class AnalyticsMixPanel {
         }
     }
 
+    /**
+     * Send user profile to mixpanel
+     * @returns {Promise}
+     */
     static async senduserprofile() {
-
-        const tmp = {...this.#user_profile, $set: this.#user_profile_set};
-        const data = "data=" + JSON.stringify([tmp]);
+        const data = "data=" + JSON.stringify({
+            ...this.#user_profile, 
+            $set: this.#user_profile_set
+        });
 
         if (this.#log) {
             console.line();
@@ -179,7 +203,7 @@ export default class AnalyticsMixPanel {
             method: "POST",
             cache: "no-cache",
             headers: this.#headers,
-            data
+            body: data,
         });
 
         if (response.status !== 200) {

@@ -92,7 +92,18 @@ document.on("ready", function() {
     AnalyticsMixPanel.watch("click", "#installCT", "Install", {installed_app_name: "CopyTrans"});
     AnalyticsMixPanel.watch("click", "#installCTBE", "Install", {installed_app_name: "CopyTrans Backup Explorer"});
 
-    AnalyticsMixPanel.setuserprofile({Name: "Marc", Birthday: "1987-02-11"});
+    // add user profile set
+    AnalyticsMixPanel.userprofileset({
+        // reserved properties
+        $name: "Marc", 
+        $email: "foo@foo.com",
+        $country_code: "RU", 
+        $region: "Vladi", 
+        $city: "Ekat", 
+        // custom properties
+        Address: "machin truc", 
+        Birthday: "1987-02-11"
+    });
 
 
     // add support for F5 reload
@@ -109,11 +120,13 @@ document.on("ready", function() {
 });
 
 document.on("closerequest", function(event) {
+    /**
     if (Dialogs.show("question", "Are you sure you want to quit?", "yes no cancel") !== "yes") {
         // cancel close
         event.preventDefault();
         return;
     }
+    */
 
     Analytics.event("app closed");
 });
