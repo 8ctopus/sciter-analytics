@@ -48,7 +48,7 @@ document.on("ready", function() {
     console.debug(Utils.sciterInfo());
 
 
-    /** 
+    /**
     * Amplitude Test Section
     */
     // initialize
@@ -75,8 +75,8 @@ document.on("ready", function() {
 
 
     /**
-    * Mixpanel Test Section 
-    */ 
+    * Mixpanel Test Section
+    */
 
     AnalyticsMixPanel.init({
         log: true,
@@ -95,13 +95,13 @@ document.on("ready", function() {
     // add user profile set
     AnalyticsMixPanel.userprofileset({
         // reserved properties
-        $name: "Marc", 
+        $name: "Marc",
         $email: "foo@foo.com",
-        $country_code: "RU", 
-        $region: "Vladi", 
-        $city: "Ekat", 
+        $country_code: "RU",
+        $region: "Vladi",
+        $city: "Ekat",
         // custom properties
-        Address: "machin truc", 
+        Address: "machin truc",
         Birthday: "1987-02-11"
     });
 
@@ -120,14 +120,6 @@ document.on("ready", function() {
 });
 
 document.on("closerequest", function(event) {
-    /**
-    if (Dialogs.show("question", "Are you sure you want to quit?", "yes no cancel") !== "yes") {
-        // cancel close
-        event.preventDefault();
-        return;
-    }
-    */
-
     Analytics.event("app closed");
 });
 
@@ -181,12 +173,12 @@ document.on("click", "button#amplitude", function() {
 document.on("click", "button#testmixpanel", function() {
     const url = "https://api.mixpanel.com/track";
 
-    const body = "data=" + JSON.stringify({
-            event: "Signed up",
+    const body = JSON.stringify({
+        event: "Signed up",
             properties: {
-                distinct_id: "13793",
-                token: "90063d16f08d604ae6f499ba9c689982",
-            }
+            distinct_id: "13793",
+            token: "YOUR_PROJECT_TOKEN",
+            },
     });
 
     console.debug(body);
