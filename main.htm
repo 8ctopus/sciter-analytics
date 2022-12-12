@@ -171,15 +171,26 @@ document.on("click", "button#amplitude", function() {
 });
 
 document.on("click", "button#testmixpanel", function() {
-    const url = "https://api.mixpanel.com/track";
+    // https://developer.mixpanel.com/reference/track-event
+    const url = "https://api.mixpanel.com/track?verbose=1&ip=1";
 
-    const body = JSON.stringify({
-        event: "Signed up",
+    const body = JSON.stringify([
+        {
+            event: "sciter",
             properties: {
-            distinct_id: "13793",
-            token: "YOUR_PROJECT_TOKEN",
+                // project token
+                token: "3a5caecd0a8027f8d488275ac42aca4a",
+                // time at which the event occurred in seconds or milliseconds since UTC epoch
+                //time: 167082291,
+                // user unique identifier
+                distinct_id: Utils.randomStr(10),
+                // unique identifier for the event used for deduplication
+                // Events with identical values for (event, time, distinct_id, $insert_id) are considered duplicates
+                // only the latest ingested one will be considered in queries.
+                "$insert_id": Utils.randomStr(10),
             },
-    });
+        }
+    ]);
 
     console.debug(body);
     myfetch(url, headers, body);
