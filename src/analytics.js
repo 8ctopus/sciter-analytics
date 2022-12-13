@@ -1,5 +1,6 @@
 /**
  * Sciter in-app analytics
+ *
  * @author 8ctopus <hello@octopuslabs.io>
  */
 
@@ -79,9 +80,12 @@ export default class Analytics {
     static event(label, eventProperties) {
         this.#events.push({
             ...this.#device,
-            eventProperties: {...this.#eventProperties, ...eventProperties},
+            eventProperties: {
+                ...this.#eventProperties,
+                ...eventProperties
+            },
             userId: this.#userId,
-            event_type: label,
+            eventType: label,
             time: Math.round(Date.now() / 1000),
         });
 
@@ -93,7 +97,7 @@ export default class Analytics {
 
         if (this.#log)
             console.log(`event - ${label}`);
-         */
+        */
     }
 
     /**
@@ -136,7 +140,7 @@ export default class Analytics {
      */
     static async send() {
         const body = JSON.stringify({
-            api_key: this.#apiKey,
+            apiKey: this.#apiKey,
             //env: this.#env,
             events: this.#events,
         });

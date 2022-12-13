@@ -3,17 +3,15 @@
  * @author 8ctopus <hello@octopuslabs.io>
  */
 
-import * as env from "@env";
-
 export default class AnalyticsMixPanel {
     // track endpoint
     static #endpoint = "https://api.mixpanel.com/track";
 
     // user profile endpoint
-    static #userendpoint = "https://api.mixpanel.com/engage";
+    static #userEndpoint = "https://api.mixpanel.com/engage";
 
     // unique id to identify user
-    static #distinct_id;
+    static #distinctId;
 
     // project token
     static #token;
@@ -40,29 +38,37 @@ export default class AnalyticsMixPanel {
 
     /**
      * Initialize
-     * @param {object} options - token, distinct_id
+     * @param {object} options - token, distinctId
      */
     static init(options) {
         this.#token = options.token ?? "";
-        this.#distinct_id = options.distinct_id ?? "";
+        this.#distinctId = options.distinctId ?? "";
 
         // keep this as they have to be specify in each request to mixpanel
-        this.#eventProperties = {token: this.#token, distinct_id: this.#distinct_id};
+        this.#eventProperties = {
+            token: this.#token,
+            distinctId: this.#distinctId
+        };
 
         // prepare the user profil stack with approriate tokens
-        this.#userProfile = {$token: this.#token, $distinct_id: this.#distinct_id};
+        this.#userProfile = {
+            $token: this.#token,
+            $distinctId: this.#distinctId
+        };
 
         this.#log = options.log ?? false;
     }
 
     /**
      * Add user profile properties
-     * @param {object} userProperties - properties to add
-     * @param userProfile
+     * @param {object} userProfile - properties to add
      * @note this function overrides properties
      */
     static userProfile(userProfile) {
-        this.#userProfile = {...this.#userProfile, ...userProfile};
+        this.#userProfile = {
+            ...this.#userProfile,
+            ...userProfile,
+        };
 
         if (this.#log)
             console.log(`user profile - ${this.#userProfile}`);
@@ -99,7 +105,10 @@ export default class AnalyticsMixPanel {
     static event(label, eventProperties) {
         this.#events.push({
             event: label,
-            properties: {...this.#eventProperties, ...eventProperties},
+            properties: {
+                ...this.#eventProperties,
+                ...eventProperties
+            },
         });
 
         if (this.#log)
@@ -123,8 +132,7 @@ export default class AnalyticsMixPanel {
                 this.event(label, eventProperties);
                 console.log(`${event} - ${selector} - ${label}`);
             });
-        }
-        else {
+        } else {
             document.on(event, () => {
                 this.event(label, eventProperties);
             });
@@ -191,11 +199,11 @@ export default class AnalyticsMixPanel {
         if (this.#log) {
             console.line();
             console.log("sending user profile");
-            console.debug(`endpoint ${this.#userendpoint}`);
+            console.debug(`endpoint ${this.#userEndpoint}`);
             console.debug(data);
         }
 
-        const response = await fetch(this.#userendpoint, {
+        const response = await fetch(this.#userEndpoint, {
             method: "POST",
             cache: "no-cache",
             headers: this.#headers,

@@ -20,7 +20,6 @@ div.vbox {
 import {uuid} from "@sciter";
 import Logger from "node_modules/sciter-logger/src/logger.js";
 import Utils from "node_modules/sciter-utils/src/utils.js";
-import Dialogs from "node_modules/sciter-dialogs/src/dialogs.js";
 
 // Amplitude analytics
 import Analytics from "src/analytics.js";
@@ -47,48 +46,82 @@ document.on("ready", function() {
     // log sciter version
     console.debug(Utils.sciterInfo());
 
+    // add support for F5 reload
+    Utils.addReloadWindow();
+
+    // close window on escape key press
+    Utils.closeWindowOnEscape(Window.this);
+
+    // center window on screen
+    Utils.centerWindow(Window.this, "screen");
+
+    // bring window to front and set input focus
+    Window.this.activate(true);
+
     /**
-    * Amplitude Test Section
+    * Amplitude
     */
-    // initialize
     Analytics.init({
         log: true,
         endpoint: "https://api2.amplitude.com/2/httpapi",
         apikey: "0fad02b65a75f270c199db6b920fbf92",
         userId: "123456",
-        eventProperties: {appName: "Sciter analytics", appRelease: "debug"},
+        eventProperties: {
+            appName: "Sciter analytics",
+            appRelease: "debug",
+        },
     });
 
     // set device info
-    Analytics.device({device_model: "iPhone 11", platform: "iOS", os_version: "15,4", device_id: "6666ABC"});
+    Analytics.device({
+        device_model: "iPhone 11",
+        platform: "iOS",
+        os_version: "15,4",
+        device_id: "6666ABC",
+    });
 
     Analytics.event("app started");
 
     // watch app install click
-    Analytics.watch("click", "#installCTP", "Install", {installed_app_name: "CopyTrans Photo"});
-    Analytics.watch("click", "#installCT", "Install CT", {installed_app_name: "CopyTrans"});
-    Analytics.watch("click", "#installCTBE", "Install CTBE", {installed_app_name: "CopyTrans Backup Explorer"});
+    Analytics.watch("click", "#installApp1", "Install app", {
+        appName: "app 1",
+    });
+
+    Analytics.watch("click", "#installApp2", "Install app", {
+        appName: "app 2",
+    });
+
+    Analytics.watch("click", "#installApp3", "Install app", {
+        appName: "app 3",
+    });
 
     // watch app close
     Analytics.watch("closerequest", undefined, "app close request");
 
     /**
-    * Mixpanel Test Section
+    * Mixpanel
     */
-
     AnalyticsMixPanel.init({
         log: true,
         endpoint: "https://api.mixpanel.com/track",
         token: "90063d16f08d604ae6f499ba9c689982",
-        distinct_id: "id" + Math.floor(Math.random() * (66666 - 13730) + 13730),
+        distinctId: Utils.random(10),
     });
 
     AnalyticsMixPanel.event("app started");
 
     // watch app install click
-    AnalyticsMixPanel.watch("click", "#installCTP", "Install", {installed_app_name: "CopyTrans Photo"});
-    AnalyticsMixPanel.watch("click", "#installCT", "Install", {installed_app_name: "CopyTrans"});
-    AnalyticsMixPanel.watch("click", "#installCTBE", "Install", {installed_app_name: "CopyTrans Backup Explorer"});
+    AnalyticsMixPanel.watch("click", "#installApp1", "Install app", {
+        appName: "app 1"
+    });
+
+    AnalyticsMixPanel.watch("click", "#installApp2", "Install app", {
+        appName: "app 2"},
+    );
+
+    AnalyticsMixPanel.watch("click", "#installApp3", "Install app", {
+        appName: "app 3"
+    });
 
     // add user profile set
     AnalyticsMixPanel.userProfileSet({
@@ -102,21 +135,9 @@ document.on("ready", function() {
         Address: "machin truc",
         Birthday: "1987-02-11",
     });
-
-    // add support for F5 reload
-    Utils.addReloadWindow();
-
-    // close window on escape key press
-    Utils.closeWindowOnEscape(Window.this);
-
-    // center window on screen
-    Utils.centerWindow(Window.this, "screen");
-
-    // bring window to front and set input focus
-    Window.this.activate(true);
 });
 
-document.on("closerequest", function(event) {
+document.on("closerequest", function(_event) {
     Analytics.event("app closed");
 });
 
@@ -184,7 +205,7 @@ document.on("click", "button#testmixpanel", function() {
                 // unique identifier for the event used for deduplication
                 // Events with identical values for (event, time, distinct_id, $insert_id) are considered duplicates
                 // only the latest ingested one will be considered in queries.
-                "$insert_id": Utils.randomStr(10),
+                $insert_id: Utils.randomStr(10),
             },
         },
     ]);
@@ -338,14 +359,14 @@ async function myfetch(url, headers, body) {
                 <h1> Password reset email sent! </h1>
             </div>
         </tab>
-        <tab caption="ctcc" #tsCTCC>
+        <tab caption="install" #tsInstall>
             <div .vbox>
-                <a #installCTP>CopyTrans Photo</a>
-                <a #installCT>CopyTrans</a>
-                <a #installCTBE>CopyTrans Backup Explorer</a>
+                <a #installApp1>install app 1</a>
+                <a #installApp2>install app 2</a>
+                <a #installApp3>install app 3</a>
             </div>
         </tab>
     </pagecontrol>
-    <plaintext #logger/>
+    <plaintext #logger />
 </body>
 </html>

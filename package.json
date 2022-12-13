@@ -20,7 +20,6 @@
   },
   "homepage": "https://github.com/8ctopus/sciter-analytics#readme",
   "devDependencies": {
-    "sciter-dialogs": "^1.3.0",
     "sciter-logger": "^1.1.3",
     "sciter-pagecontrol": "^1.7.1",
     "sciter-sandbox": "^1.1.5",
