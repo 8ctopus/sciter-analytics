@@ -185,7 +185,7 @@ document.on("click", "button#testAmplitude", function() {
 // test mixpanel
 document.on("click", "button#testMixpanel", function() {
     // https://developer.mixpanel.com/reference/track-event
-    const endpoint = "https://api.mixpanel.com/track?verbose=1&ip=0";
+    const apiEvents = "https://api.mixpanel.com/track?verbose=1&ip=0";
 
     const projectToken = "3a5caecd0a8027f8d488275ac42aca4a";
 
@@ -193,7 +193,7 @@ document.on("click", "button#testMixpanel", function() {
 
     const timestamp = Date.now();
 
-    const body = JSON.stringify([
+    let body = JSON.stringify([
         {
             event: "send 1 from app",
             properties: {
@@ -214,7 +214,7 @@ document.on("click", "button#testMixpanel", function() {
         {
             event: "send 2 from app",
             properties: {
-                token: "3a5caecd0a8027f8d488275ac42aca4a",
+                token: projectToken,
                 //time: timestamp,
                 distinct_id: user,
                 $insert_id: Utils.randomStr(10),
@@ -225,7 +225,23 @@ document.on("click", "button#testMixpanel", function() {
     ]);
 
     console.debug(body);
-    myfetch(endpoint, headers, body);
+    myfetch(apiEvents, headers, body);
+
+    const apiUser = "https://api.mixpanel.com/engage?verbose=1#profile-set";
+
+    body = JSON.stringify([
+        {
+            $token: projectToken,
+            $distinct_id: Utils.randomStr(10),
+            email: "john.doe@test.net",
+            $set: {
+                name: "John Doe",
+            },
+        }
+    ]);
+
+    console.debug(body);
+    myfetch(apiUser, headers, body);
 });
 
 document.on("click", function(event, element) {
