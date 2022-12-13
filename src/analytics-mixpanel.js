@@ -1,29 +1,24 @@
 /**
  * Sciter in-app analytics
+ *
  * @author 8ctopus <hello@octopuslabs.io>
  */
 
 export default class AnalyticsMixPanel {
     // event tracking endpoint
-    static #endpoint = "https://api.mixpanel.com/track";
+    static #apiEvent = "https://api.mixpanel.com/track";
 
     // user profile endpoint
-    static #userEndpoint = "https://api.mixpanel.com/engage";
+    static #apiUser = "https://api.mixpanel.com/engage";
 
     // project token
     static #token;
 
-    // unique id to identify user
+    // user unique id
     static #distinctId;
 
     // events stack
     static #events = [];
-
-    // event subproperties stack
-    static #eventProperties = [];
-
-    // user profile stack
-    static #userProfile = [];
 
     // user profile subproperties stack
     static #userProfileSet = [];
@@ -41,37 +36,10 @@ export default class AnalyticsMixPanel {
      * @param {object} options
      */
     static init(options) {
-        this.#token = options.token ?? "";
-        this.#distinctId = options.distinctId ?? "";
-
-        // keep this as they have to be specified in each request to mixpanel
-        this.#eventProperties = {
-            token: this.#token,
-            distinctId: this.#distinctId
-        };
-
-        // prepare the user profile stack with approriate tokens
-        this.#userProfile = {
-            $token: this.#token,
-            $distinctId: this.#distinctId
-        };
+        this.#token = options.token;
+        this.#distinctId = options.distinctId;
 
         this.#log = options.log ?? false;
-    }
-
-    /**
-     * Add user profile properties
-     * @param {object} userProfile - properties to add
-     * @note this function overrides properties
-     */
-    static userProfile(userProfile) {
-        this.#userProfile = {
-            ...this.#userProfile,
-            ...userProfile,
-        };
-
-        if (this.#log)
-            console.log(`user profile - ${this.#userProfile}`);
     }
 
     /**
@@ -106,7 +74,8 @@ export default class AnalyticsMixPanel {
         this.#events.push({
             event: label,
             properties: {
-                ...this.#eventProperties,
+                token: this.#token,
+                distinctId: this.#distinctId,
                 ...eventProperties
             },
         });
@@ -161,12 +130,12 @@ export default class AnalyticsMixPanel {
 
         if (this.#log) {
             console.line();
-            console.log("sending events");
-            console.debug(`endpoint ${this.#endpoint}`);
+            console.log("sending events...");
+            console.debug(`endpoint ${this.#apiEvent}`);
             console.debug(body);
         }
 
-        const response = await fetch(this.#endpoint, {
+        const response = await fetch(this.#apiEvent, {
             method: "POST",
             cache: "no-cache",
             headers: this.#headers,
@@ -192,18 +161,19 @@ export default class AnalyticsMixPanel {
      */
     static async sendUserProfile() {
         const data = "data=" + JSON.stringify({
-            ...this.#userProfile,
+            token: this.#token,
+            distinctId: this.#distinctId
             $set: this.#userProfileSet,
         });
 
         if (this.#log) {
             console.line();
-            console.log("sending user profile");
-            console.debug(`endpoint ${this.#userEndpoint}`);
+            console.log("sending user profile...");
+            console.debug(`endpoint ${this.#apiUser}`);
             console.debug(data);
         }
 
-        const response = await fetch(this.#userEndpoint, {
+        const response = await fetch(this.#apiUser, {
             method: "POST",
             cache: "no-cache",
             headers: this.#headers,
