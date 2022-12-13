@@ -7,12 +7,12 @@ import * as env from "@env";
 
 export default class Analytics {
     static #endpoint;
-    static #api_key;
-    static #user_id;
+    static #apiKey;
+    static #userId;
 
     static #device = [];
 
-    static #event_properties = [];
+    static #eventProperties = [];
 
     static #log;
 
@@ -30,9 +30,9 @@ export default class Analytics {
      */
     static init(options) {
         this.#endpoint = options.endpoint ?? "";
-        this.#api_key = options.apikey ?? "";
-        this.#user_id = options.user_id ?? "";
-        this.#event_properties = options.event_properties ?? [];
+        this.#apiKey = options.apikey ?? "";
+        this.#userId = options.userId ?? "";
+        this.#eventProperties = options.eventProperties ?? [];
 
         // add environment variables
         this.#env = {
@@ -47,9 +47,10 @@ export default class Analytics {
         this.#log = options.log ?? false;
     }
 
-    /** Set device info
-     * @param {object} device info - device_model, platform, os_version, device_id
-    */
+    /**
+     * Set device info
+     * @param {object} deviceInfo - info - device_model, platform, os_version, device_id
+     */
     static device(deviceInfo) {
         this.#device = {
             ...deviceInfo,
@@ -73,17 +74,18 @@ export default class Analytics {
     /**
      * Add event
      * @param {string} label - event label
-     * @param {object} event properties
+     * @param {object} eventProperties
      */
-    static event(label, event_properties) {
+    static event(label, eventProperties) {
         this.#events.push({
             ...this.#device,
-            event_properties: {...this.#event_properties, ...event_properties},
-            user_id: this.#user_id,
+            eventProperties: {...this.#eventProperties, ...eventProperties},
+            userId: this.#userId,
             event_type: label,
             time: Math.round(Date.now() / 1000),
         });
-        /**
+
+        /*
         this.#events.push({
             label,
             timestamp: new Date(),
@@ -91,8 +93,7 @@ export default class Analytics {
 
         if (this.#log)
             console.log(`event - ${label}`);
-
-        */
+         */
     }
 
     /**
@@ -100,10 +101,11 @@ export default class Analytics {
      * @param {string} event
      * @param {string} selector
      * @param {string} label
+     * @param {object} eventProperties
      * @returns {boolean}
      * @throws Error
      */
-    static watch(event, selector, label, event_properties) {
+    static watch(event, selector, label, eventProperties) {
         if (arguments.length < 3)
             throw new Error("method requires 3 arguments");
 
@@ -111,11 +113,11 @@ export default class Analytics {
 
         if (selector) {
             document.on(event, selector, () => {
-                this.event(label, event_properties);
+                this.event(label, eventProperties);
                 console.log(`${event} - ${selector} - ${label}`);
             });
         }
-        /**
+        /*
         else {
             document.on(event, () => {
                 this.event(label);
@@ -134,9 +136,8 @@ export default class Analytics {
      */
     static async send() {
         const body = JSON.stringify({
-            api_key: this.#api_key,
-
-            //      env: this.#env,
+            api_key: this.#apiKey,
+            //env: this.#env,
             events: this.#events,
         });
 

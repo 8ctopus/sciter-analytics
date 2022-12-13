@@ -47,7 +47,6 @@ document.on("ready", function() {
     // log sciter version
     console.debug(Utils.sciterInfo());
 
-
     /**
     * Amplitude Test Section
     */
@@ -56,8 +55,8 @@ document.on("ready", function() {
         log: true,
         endpoint: "https://api2.amplitude.com/2/httpapi",
         apikey: "0fad02b65a75f270c199db6b920fbf92",
-        user_id: "123456",
-        event_properties: {appName: "Sciter analytics", appRelease: "debug"},
+        userId: "123456",
+        eventProperties: {appName: "Sciter analytics", appRelease: "debug"},
     });
 
     // set device info
@@ -72,7 +71,6 @@ document.on("ready", function() {
 
     // watch app close
     Analytics.watch("closerequest", undefined, "app close request");
-
 
     /**
     * Mixpanel Test Section
@@ -93,7 +91,7 @@ document.on("ready", function() {
     AnalyticsMixPanel.watch("click", "#installCTBE", "Install", {installed_app_name: "CopyTrans Backup Explorer"});
 
     // add user profile set
-    AnalyticsMixPanel.userprofileset({
+    AnalyticsMixPanel.userProfileSet({
         // reserved properties
         $name: "Marc",
         $email: "foo@foo.com",
@@ -102,9 +100,8 @@ document.on("ready", function() {
         $city: "Ekat",
         // custom properties
         Address: "machin truc",
-        Birthday: "1987-02-11"
+        Birthday: "1987-02-11",
     });
-
 
     // add support for F5 reload
     Utils.addReloadWindow();
@@ -189,7 +186,7 @@ document.on("click", "button#testmixpanel", function() {
                 // only the latest ingested one will be considered in queries.
                 "$insert_id": Utils.randomStr(10),
             },
-        }
+        },
     ]);
 
     console.debug(body);
@@ -229,7 +226,7 @@ document.on("click", function(event, element) {
             break;
 
         case "sendUserMixpanel":
-            AnalyticsMixPanel.senduserprofile();
+            AnalyticsMixPanel.sendUserProfile();
             break;
 
         case "sendALLMixpanel":

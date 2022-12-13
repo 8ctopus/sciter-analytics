@@ -6,7 +6,6 @@
 import * as env from "@env";
 
 export default class AnalyticsMixPanel {
-    
     // track endpoint
     static #endpoint = "https://api.mixpanel.com/track";
 
@@ -23,13 +22,13 @@ export default class AnalyticsMixPanel {
     static #events = [];
 
     // event subproperties stack
-    static #event_properties = [];
+    static #eventProperties = [];
 
     // user profile stack
-    static #user_profile = [];
+    static #userProfile = [];
 
     // user profile subproperties stack
-    static #user_profile_set = [];
+    static #userProfileSet = [];
 
     static #headers = {
         "Content-Type": "application/x-www-form-urlencoded",
@@ -48,39 +47,37 @@ export default class AnalyticsMixPanel {
         this.#distinct_id = options.distinct_id ?? "";
 
         // keep this as they have to be specify in each request to mixpanel
-        this.#event_properties = {token: this.#token, distinct_id: this.#distinct_id};
+        this.#eventProperties = {token: this.#token, distinct_id: this.#distinct_id};
 
         // prepare the user profil stack with approriate tokens
-        this.#user_profile = {$token: this.#token, $distinct_id: this.#distinct_id};
+        this.#userProfile = {$token: this.#token, $distinct_id: this.#distinct_id};
 
         this.#log = options.log ?? false;
     }
 
     /**
-    * Add user profile properties
-    * @params {user_properties} - properties to add
-    * @note this function overrides properties  
-    */ 
-    static userprofile(user_profile) {
+     * Add user profile properties
+     * @param {object} userProperties - properties to add
+     * @param userProfile
+     * @note this function overrides properties
+     */
+    static userProfile(userProfile) {
+        this.#userProfile = {...this.#userProfile, ...userProfile};
 
-        this.#user_profile = {...this.#user_profile, ...user_profile};
-     
         if (this.#log)
-            console.log(`user profile - ${this.#user_profile}`);
+            console.log(`user profile - ${this.#userProfile}`);
     }
 
-
     /**
-    * Add user profile properties
-    * @params {user_properties} - properties to add. Can have any key. Reserved keys are: $name, $email, $country_code, $region, $city
-    * @note this function overrides properties  
-    */ 
-    static userprofileset(user_properties) {
+     * Add user profile properties
+     * @param {object} userProperties - properties to add. Can have any key. Reserved keys are: $name, $email, $country_code, $region, $city
+     * @note this function overrides properties
+     */
+    static userProfileSet(userProperties) {
+        this.#userProfileSet = userProperties;
 
-        this.#user_profile_set = user_properties;
-     
         if (this.#log)
-            console.log(`properties - ${user_properties}`);
+            console.log(`properties - ${userProperties}`);
     }
 
     /**
@@ -97,14 +94,14 @@ export default class AnalyticsMixPanel {
     /**
      * Add event
      * @param {string} label - event label
-     * @param {object} event_properties - subproperties of the event
+     * @param {object} eventProperties - subproperties of the event
      */
-    static event(label, event_properties) {
+    static event(label, eventProperties) {
         this.#events.push({
             event: label,
-            properties: {...this.#event_properties, ...event_properties},
+            properties: {...this.#eventProperties, ...eventProperties},
         });
-     
+
         if (this.#log)
             console.log(`event - ${label}`);
     }
@@ -114,23 +111,22 @@ export default class AnalyticsMixPanel {
      * @param {string} event
      * @param {string} selector
      * @param {string} label - event label
-     * @param {object} event_properties - event subproperties
+     * @param {object} eventProperties - event subproperties
      * @returns {boolean}
      */
-    static watch(event, selector, label, event_properties) {
-
+    static watch(event, selector, label, eventProperties) {
         if (this.#log)
-            console.log(`${event} - ${selector} - ${label} - ` + JSON.stringify(event_properties));
+            console.log(`${event} - ${selector} - ${label} - ` + JSON.stringify(eventProperties));
 
         if (selector) {
             document.on(event, selector, () => {
-                this.event(label, event_properties);
+                this.event(label, eventProperties);
                 console.log(`${event} - ${selector} - ${label}`);
             });
         }
         else {
             document.on(event, () => {
-                this.event(label, event_properties);
+                this.event(label, eventProperties);
             });
         }
 
@@ -142,22 +138,22 @@ export default class AnalyticsMixPanel {
      * @returns {Promise}
      */
     static async send() {
-        this.senduserprofile();
-        this.sendevent();
+        this.sendUserProfile();
+        this.sendEvent();
     }
 
     /**
      * Send events to mixpanel
      * @returns {Promise}
      */
-    static async sendevent() {
+    static async sendEvent() {
         const body = "data=" + JSON.stringify(
             this.#events,
         );
 
         if (this.#log) {
             console.line();
-            console.log('sending events');
+            console.log("sending events");
             console.debug(`endpoint ${this.#endpoint}`);
             console.debug(body);
         }
@@ -166,7 +162,7 @@ export default class AnalyticsMixPanel {
             method: "POST",
             cache: "no-cache",
             headers: this.#headers,
-            body
+            body,
         });
 
         if (response.status !== 200 || !response.ok) {
@@ -186,15 +182,15 @@ export default class AnalyticsMixPanel {
      * Send user profile to mixpanel
      * @returns {Promise}
      */
-    static async senduserprofile() {
+    static async sendUserProfile() {
         const data = "data=" + JSON.stringify({
-            ...this.#user_profile, 
-            $set: this.#user_profile_set
+            ...this.#userProfile,
+            $set: this.#userProfileSet,
         });
 
         if (this.#log) {
             console.line();
-            console.log('sending user profile');
+            console.log("sending user profile");
             console.debug(`endpoint ${this.#userendpoint}`);
             console.debug(data);
         }
