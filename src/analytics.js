@@ -132,8 +132,6 @@ export default class Analytics {
         return true;
     }
 
-    //const [hours, minutes, seconds] = new Date().toLocaleTimeString("en-US").split(/:| /)
-
     /**
      * Send analytics to remote server
      * @returns {Promise}

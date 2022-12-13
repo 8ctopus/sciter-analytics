@@ -59,18 +59,20 @@ document.on("ready", function() {
     Window.this.activate(true);
 
     /**
-    * Amplitude
-    */
+     * Amplitude
+     */
     Analytics.init({
         log: true,
         endpoint: "https://api2.amplitude.com/2/httpapi",
         apikey: "0fad02b65a75f270c199db6b920fbf92",
-        userId: "123456",
+        userId: Utils.randomStr(10),
         eventProperties: {
             appName: "Sciter analytics",
             appRelease: "debug",
         },
     });
+
+    Analytics.event("app started");
 
     // set device info
     Analytics.device({
@@ -80,7 +82,8 @@ document.on("ready", function() {
         device_id: "6666ABC",
     });
 
-    Analytics.event("app started");
+    // watch app close
+    Analytics.watch("closerequest", undefined, "app close request");
 
     // watch app install click
     Analytics.watch("click", "#installApp1", "Install app", {
@@ -95,12 +98,9 @@ document.on("ready", function() {
         appName: "app 3",
     });
 
-    // watch app close
-    Analytics.watch("closerequest", undefined, "app close request");
-
     /**
-    * Mixpanel
-    */
+     * Mixpanel
+     */
     AnalyticsMixPanel.init({
         log: true,
         endpoint: "https://api.mixpanel.com/track",
@@ -129,10 +129,11 @@ document.on("ready", function() {
         $name: "Marc",
         $email: "foo@foo.com",
         $country_code: "RU",
-        $region: "Vladi",
-        $city: "Ekat",
+        $region: "Moscow",
+        $city: "Moscow",
+
         // custom properties
-        Address: "machin truc",
+        Address: "Some street",
         Birthday: "1987-02-11",
     });
 });
@@ -188,6 +189,7 @@ document.on("click", "button#amplitude", function() {
     myfetch(url, headers, body);
 });
 
+// mixpanel test
 document.on("click", "button#testmixpanel", function() {
     // https://developer.mixpanel.com/reference/track-event
     const url = "https://api.mixpanel.com/track?verbose=1&ip=1";
@@ -250,7 +252,7 @@ document.on("click", function(event, element) {
             AnalyticsMixPanel.sendUserProfile();
             break;
 
-        case "sendALLMixpanel":
+        case "sendAllMixpanel":
             AnalyticsMixPanel.send();
             break;
 
@@ -316,7 +318,7 @@ async function myfetch(url, headers, body) {
     <button #showEvents>show events</button>
     <button #sendEventsAmplitude>send events Amplitude</button>
     <button #sendUserMixpanel>send User Mixpanel</button>
-    <button #sendALLMixpanel>send ALL Mixpanel</button>
+    <button #sendAllMixpanel>send ALL Mixpanel</button>
     <pagecontrol header-position="top" header-visible="true">
         <tab caption="login" #tsLogin selected>
             <div .vbox>
