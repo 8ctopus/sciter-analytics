@@ -75,8 +75,8 @@ export default class AnalyticsMixPanel {
             event: label,
             properties: {
                 token: this.#token,
-                distinctId: this.#distinctId,
-                ...eventProperties
+                distinct_id: this.#distinctId,
+                ...eventProperties,
             },
         });
 
@@ -162,7 +162,7 @@ export default class AnalyticsMixPanel {
     static async sendUserProfile() {
         const data = "data=" + JSON.stringify({
             token: this.#token,
-            distinctId: this.#distinctId
+            distinct_id: this.#distinctId,
             $set: this.#userProfileSet,
         });
 
