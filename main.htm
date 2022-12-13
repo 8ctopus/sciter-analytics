@@ -74,14 +74,6 @@ document.on("ready", function() {
 
     Analytics.event("app started");
 
-    // set device info
-    Analytics.device({
-        device_model: "iPhone 11",
-        platform: "iOS",
-        os_version: "15,4",
-        device_id: "6666ABC",
-    });
-
     // watch app close
     Analytics.watch("closerequest", undefined, "app close request");
 
@@ -103,8 +95,9 @@ document.on("ready", function() {
      */
     AnalyticsMixPanel.init({
         log: false,
-        endpoint: "https://api.mixpanel.com/track",
+        // project token
         token: "90063d16f08d604ae6f499ba9c689982",
+        // user unique id
         distinctId: Utils.randomStr(10),
     });
 

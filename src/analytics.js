@@ -11,8 +11,6 @@ export default class Analytics {
     static #apiKey;
     static #userId;
 
-    static #device = [];
-
     static #eventProperties = [];
 
     static #log;
@@ -49,19 +47,6 @@ export default class Analytics {
     }
 
     /**
-     * Set device info
-     * @param {object} deviceInfo - info - device_model, platform, os_version, device_id
-     */
-    static device(deviceInfo) {
-        this.#device = {
-            ...deviceInfo,
-        };
-
-        if (this.#log)
-            console.log(`device - ${this.#device}`);
-    }
-
-    /**
      * Add environment variables
      * @param {object} environment
      */
@@ -79,7 +64,6 @@ export default class Analytics {
      */
     static event(label, eventProperties) {
         this.#events.push({
-            ...this.#device,
             eventProperties: {
                 ...this.#eventProperties,
                 ...eventProperties

@@ -4,19 +4,19 @@
  */
 
 export default class AnalyticsMixPanel {
-    // track endpoint
+    // event tracking endpoint
     static #endpoint = "https://api.mixpanel.com/track";
 
     // user profile endpoint
     static #userEndpoint = "https://api.mixpanel.com/engage";
 
-    // unique id to identify user
-    static #distinctId;
-
     // project token
     static #token;
 
-    //events stack
+    // unique id to identify user
+    static #distinctId;
+
+    // events stack
     static #events = [];
 
     // event subproperties stack
@@ -38,19 +38,19 @@ export default class AnalyticsMixPanel {
 
     /**
      * Initialize
-     * @param {object} options - token, distinctId
+     * @param {object} options
      */
     static init(options) {
         this.#token = options.token ?? "";
         this.#distinctId = options.distinctId ?? "";
 
-        // keep this as they have to be specify in each request to mixpanel
+        // keep this as they have to be specified in each request to mixpanel
         this.#eventProperties = {
             token: this.#token,
             distinctId: this.#distinctId
         };
 
-        // prepare the user profil stack with approriate tokens
+        // prepare the user profile stack with approriate tokens
         this.#userProfile = {
             $token: this.#token,
             $distinctId: this.#distinctId
