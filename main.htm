@@ -102,7 +102,7 @@ document.on("ready", function() {
      * Mixpanel
      */
     AnalyticsMixPanel.init({
-        log: true,
+        log: false,
         endpoint: "https://api.mixpanel.com/track",
         token: "90063d16f08d604ae6f499ba9c689982",
         distinctId: Utils.randomStr(10),
@@ -192,21 +192,34 @@ document.on("click", "button#testAmplitude", function() {
 // test mixpanel
 document.on("click", "button#testMixpanel", function() {
     // https://developer.mixpanel.com/reference/track-event
-    const url = "https://api.mixpanel.com/track?verbose=1&ip=1";
+    const url = "https://api.mixpanel.com/track?verbose=1&ip=0";
+
+    const projectToken = "3a5caecd0a8027f8d488275ac42aca4a";
+
+    const user = Utils.randomStr(10);
 
     const body = JSON.stringify([
         {
-            event: "sciter",
+            event: "send 1 from app",
             properties: {
                 // project token
-                token: "3a5caecd0a8027f8d488275ac42aca4a",
+                token: projectToken,
                 // time at which the event occurred in seconds or milliseconds since UTC epoch
                 //time: Date.now(),
                 // user unique identifier
-                distinct_id: Utils.randomStr(10),
+                distinct_id: user,
                 // unique identifier for the event used for deduplication
                 // Events with identical values for (event, time, distinct_id, $insert_id) are considered duplicates
                 // only the latest ingested one will be considered in queries.
+                $insert_id: Utils.randomStr(10),
+            },
+        },
+        {
+            event: "send 2 from app",
+            properties: {
+                token: "3a5caecd0a8027f8d488275ac42aca4a",
+                //time: Date.now(),
+                distinct_id: user,
                 $insert_id: Utils.randomStr(10),
             },
         },
