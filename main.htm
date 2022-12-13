@@ -101,6 +101,20 @@ document.on("ready", function() {
         distinctId: Utils.randomStr(10),
     });
 
+    // add user profile set
+    AnalyticsMixPanel.userProfileSet({
+        // reserved properties
+        $name: "Marc",
+        $email: "foo@foo.com",
+        $country_code: "RU",
+        $region: "Moscow",
+        $city: "Moscow",
+
+        // custom properties
+        Address: "Some street",
+        Birthday: "1987-02-11",
+    });
+
     AnalyticsMixPanel.event("app started");
 
     // watch app install click
@@ -114,20 +128,6 @@ document.on("ready", function() {
 
     AnalyticsMixPanel.watch("click", "#installApp3", "Install app", {
         appName: "app 3"
-    });
-
-    // add user profile set
-    AnalyticsMixPanel.userProfileSet({
-        // reserved properties
-        $name: "Marc",
-        $email: "foo@foo.com",
-        $country_code: "RU",
-        $region: "Moscow",
-        $city: "Moscow",
-
-        // custom properties
-        Address: "Some street",
-        Birthday: "1987-02-11",
     });
 });
 
@@ -185,11 +185,13 @@ document.on("click", "button#testAmplitude", function() {
 // test mixpanel
 document.on("click", "button#testMixpanel", function() {
     // https://developer.mixpanel.com/reference/track-event
-    const url = "https://api.mixpanel.com/track?verbose=1&ip=0";
+    const endpoint = "https://api.mixpanel.com/track?verbose=1&ip=0";
 
     const projectToken = "3a5caecd0a8027f8d488275ac42aca4a";
 
-    const user = Utils.randomStr(10);
+    const user = "john.doe@test.net";
+
+    const timestamp = Date.now();
 
     const body = JSON.stringify([
         {
@@ -198,28 +200,32 @@ document.on("click", "button#testMixpanel", function() {
                 // project token
                 token: projectToken,
                 // time at which the event occurred in seconds or milliseconds since UTC epoch
-                //time: Date.now(),
+                //time: timestamp - (1000 * 60 * 60 * 24),
                 // user unique identifier
                 distinct_id: user,
                 // unique identifier for the event used for deduplication
                 // Events with identical values for (event, time, distinct_id, $insert_id) are considered duplicates
                 // only the latest ingested one will be considered in queries.
                 $insert_id: Utils.randomStr(10),
+                ip: "102.128.165.255",
+                custom_1: "test",
             },
         },
         {
             event: "send 2 from app",
             properties: {
                 token: "3a5caecd0a8027f8d488275ac42aca4a",
-                //time: Date.now(),
+                //time: timestamp,
                 distinct_id: user,
                 $insert_id: Utils.randomStr(10),
+                ip: "102.128.165.255",
+                custom_1: "test",
             },
         },
     ]);
 
     console.debug(body);
-    myfetch(url, headers, body);
+    myfetch(endpoint, headers, body);
 });
 
 document.on("click", function(event, element) {
