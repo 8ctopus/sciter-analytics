@@ -158,8 +158,8 @@ document.on("click", "button#httpbin", function() {
     myfetch(url, headers, body);
 });
 
-// amplitude test
-document.on("click", "button#amplitude", function() {
+// test amplitude
+document.on("click", "button#testAmplitude", function() {
     const url = "https://api2.amplitude.com/2/httpapi";
 
     const body = JSON.stringify({
@@ -189,8 +189,8 @@ document.on("click", "button#amplitude", function() {
     myfetch(url, headers, body);
 });
 
-// mixpanel test
-document.on("click", "button#testmixpanel", function() {
+// test mixpanel
+document.on("click", "button#testMixpanel", function() {
     // https://developer.mixpanel.com/reference/track-event
     const url = "https://api.mixpanel.com/track?verbose=1&ip=1";
 
@@ -201,7 +201,7 @@ document.on("click", "button#testmixpanel", function() {
                 // project token
                 token: "3a5caecd0a8027f8d488275ac42aca4a",
                 // time at which the event occurred in seconds or milliseconds since UTC epoch
-                //time: 167082291,
+                //time: Date.now(),
                 // user unique identifier
                 distinct_id: Utils.randomStr(10),
                 // unique identifier for the event used for deduplication
@@ -314,11 +314,12 @@ async function myfetch(url, headers, body) {
 </script>
 </head>
 <body>
-    <button #testmixpanel>test mixpanel</button>
+    <button #testAmplitude>test Amplitude</button>
+    <button #testMixpanel>test mixpanel</button>
     <button #showEvents>show events</button>
     <button #sendEventsAmplitude>send events Amplitude</button>
-    <button #sendUserMixpanel>send User Mixpanel</button>
-    <button #sendAllMixpanel>send ALL Mixpanel</button>
+    <button #sendUserMixpanel>send user Mixpanel</button>
+    <button #sendAllMixpanel>send all Mixpanel</button>
     <pagecontrol header-position="top" header-visible="true">
         <tab caption="login" #tsLogin selected>
             <div .vbox>
