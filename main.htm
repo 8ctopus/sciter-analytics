@@ -17,7 +17,6 @@ div.vbox {
 </style>
 <script type="module">
 
-import {uuid} from "@sciter";
 import Logger from "node_modules/sciter-logger/src/logger.js";
 import Utils from "node_modules/sciter-utils/src/utils.js";
 
@@ -144,7 +143,7 @@ document.on("click", "button#httpbin", function() {
     const url = "https://httpbin.org/post";
 
     const body = JSON.stringify({
-        uuid: uuid(),
+        uuid: Utils.uuid(),
         event: "button clicked",
     });
 
@@ -189,7 +188,7 @@ document.on("click", "button#testMixpanel", function() {
 
     const projectToken = "c557e826f1a76aaa4ed02e4681f95ae4";
 
-    const userId = Utils.randomStr(10);
+    const userId = Utils.uuid();
 
     const time = Date.now() / 1000;
 
