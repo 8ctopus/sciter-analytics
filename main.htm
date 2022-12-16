@@ -191,23 +191,40 @@ document.on("click", "button#testMixpanel", function() {
 
     const userId = Utils.randomStr(10);
 
-    const timestamp = Date.now();
+    const time = Date.now() / 1000;
 
+    const ip = "102.128.165.255";
+
+    // create two events
     let body = JSON.stringify([
         {
             event: "send 1 from app",
             properties: {
                 // project token
                 token: projectToken,
-                // time at which the event occurred in seconds or milliseconds since UTC epoch
-                //time: timestamp - (1000 * 60 * 60 * 24),
+                // time at which the event occurred in seconds since UTC epoch (optional)
+                time: time - (60 * 5),
                 // user unique identifier
                 distinct_id: userId,
+                //$device_id: userId, (optional)
                 // unique identifier for the event used for deduplication
-                // Events with identical values for (event, time, distinct_id, $insert_id) are considered duplicates
+                // events with identical values for (event, time, distinct_id, $insert_id) are considered duplicates
                 // only the latest ingested one will be considered in queries.
                 $insert_id: Utils.randomStr(10),
-                ip: "102.128.165.255",
+                // optional
+                ip,
+
+                // optional
+                $os: "Windows",
+                $browser: "Microsoft Edge",
+                $current_url: "https://test.net/pricing/",
+                $initial_referrer: "https://google.com/",
+                $initial_referring_domain: "https://google.com/",
+                $browser_version: 108,
+                $screen_height: 1080,
+                $screen_width: 1920,
+
+                // bring your own
                 custom_1: "test",
             },
         },
@@ -215,11 +232,10 @@ document.on("click", "button#testMixpanel", function() {
             event: "send 2 from app",
             properties: {
                 token: projectToken,
-                //time: timestamp,
+                time: time,
                 distinct_id: userId,
                 $insert_id: Utils.randomStr(10),
-                ip: "102.128.165.255",
-                custom_1: "test",
+                ip,
             },
         },
     ]);
@@ -227,6 +243,7 @@ document.on("click", "button#testMixpanel", function() {
     console.debug(body);
     myfetch(apiEvents, headers, body);
 
+    // create user
     const apiUser = "https://api.mixpanel.com/engage?verbose=1#profile-set";
 
     body = JSON.stringify([
