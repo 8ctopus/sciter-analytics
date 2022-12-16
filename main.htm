@@ -187,9 +187,9 @@ document.on("click", "button#testMixpanel", function() {
     // https://developer.mixpanel.com/reference/track-event
     const apiEvents = "https://api.mixpanel.com/track?verbose=1&ip=0";
 
-    const projectToken = "3a5caecd0a8027f8d488275ac42aca4a";
+    const projectToken = "c557e826f1a76aaa4ed02e4681f95ae4";
 
-    const user = "john.doe@test.net";
+    const userId = Utils.randomStr(10);
 
     const timestamp = Date.now();
 
@@ -202,7 +202,7 @@ document.on("click", "button#testMixpanel", function() {
                 // time at which the event occurred in seconds or milliseconds since UTC epoch
                 //time: timestamp - (1000 * 60 * 60 * 24),
                 // user unique identifier
-                distinct_id: user,
+                distinct_id: userId,
                 // unique identifier for the event used for deduplication
                 // Events with identical values for (event, time, distinct_id, $insert_id) are considered duplicates
                 // only the latest ingested one will be considered in queries.
@@ -216,7 +216,7 @@ document.on("click", "button#testMixpanel", function() {
             properties: {
                 token: projectToken,
                 //time: timestamp,
-                distinct_id: user,
+                distinct_id: userId,
                 $insert_id: Utils.randomStr(10),
                 ip: "102.128.165.255",
                 custom_1: "test",
@@ -232,12 +232,12 @@ document.on("click", "button#testMixpanel", function() {
     body = JSON.stringify([
         {
             $token: projectToken,
-            $distinct_id: Utils.randomStr(10),
-            email: "john.doe@test.net",
+            $distinct_id: userId,
             $set: {
                 name: "John Doe",
+                $email: "john.doe@test.net",
             },
-        }
+        },
     ]);
 
     console.debug(body);
@@ -343,7 +343,7 @@ async function myfetch(url, headers, body) {
 </head>
 <body>
     <button #testAmplitude>test Amplitude</button>
-    <button #testMixpanel>test mixpanel</button>
+    <button #testMixpanel>test Mixpanel</button>
     <button #showEvents>show events</button>
     <button #sendEventsAmplitude>send events Amplitude</button>
     <button #sendUserMixpanel>send user Mixpanel</button>
