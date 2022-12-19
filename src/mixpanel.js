@@ -4,7 +4,7 @@
  * @author 8ctopus <hello@octopuslabs.io>
  */
 
-export default class AnalyticsMixPanel {
+export default class MixPanel {
     // event tracking endpoint
     static #apiEvent = "https://api.mixpanel.com/track";
 

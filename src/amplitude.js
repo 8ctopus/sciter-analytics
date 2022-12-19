@@ -1,12 +1,12 @@
 /**
- * Sciter in-app analytics
+ * Sciter in-app analytics for Amplitude
  *
  * @author 8ctopus <hello@octopuslabs.io>
  */
 
 import * as env from "@env";
 
-export default class Analytics {
+export default class Amplitude {
     static #endpoint;
     static #apiKey;
     static #userId;

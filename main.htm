@@ -20,11 +20,11 @@ div.vbox {
 import Logger from "node_modules/sciter-logger/src/logger.js";
 import Utils from "node_modules/sciter-utils/src/utils.js";
 
-// Amplitude analytics
-import Analytics from "src/analytics.js";
+// Amplitude
+import Amplitude from "src/amplitude.js";
 
-// mixpanel analytics
-import AnalyticsMixPanel from "src/analytics-mixpanel.js";
+// Mixpanel
+import Mixpanel from "src/mixpanel.js";
 
 // initialize logger
 Logger.init({
@@ -60,7 +60,7 @@ document.on("ready", function() {
     /**
      * Amplitude
      */
-    Analytics.init({
+    Amplitude.init({
         log: true,
         endpoint: "https://api2.amplitude.com/2/httpapi",
         apikey: "0fad02b65a75f270c199db6b920fbf92",
@@ -71,28 +71,25 @@ document.on("ready", function() {
         },
     });
 
-    Analytics.event("app started");
+    Amplitude.event("app started");
 
     // watch app close
-    Analytics.watch("closerequest", undefined, "app close request");
+    Amplitude.watch("closerequest", undefined, "app close request");
 
     // watch app install click
-    Analytics.watch("click", "#installApp1", "Install app", {
+    Amplitude.watch("click", "#installApp1", "Install app", {
         appName: "app 1",
     });
 
-    Analytics.watch("click", "#installApp2", "Install app", {
+    Amplitude.watch("click", "#installApp2", "Install app", {
         appName: "app 2",
     });
 
-    Analytics.watch("click", "#installApp3", "Install app", {
+    Amplitude.watch("click", "#installApp3", "Install app", {
         appName: "app 3",
     });
 
-    /**
-     * Mixpanel
-     */
-    AnalyticsMixPanel.init({
+    Mixpanel.init({
         log: false,
         // project token
         token: "90063d16f08d604ae6f499ba9c689982",
@@ -101,7 +98,7 @@ document.on("ready", function() {
     });
 
     // add user profile set
-    AnalyticsMixPanel.userProfileSet({
+    Mixpanel.userProfileSet({
         // reserved properties
         $name: "Marc",
         $email: "foo@foo.com",
@@ -114,24 +111,24 @@ document.on("ready", function() {
         Birthday: "1987-02-11",
     });
 
-    AnalyticsMixPanel.event("app started");
+    Mixpanel.event("app started");
 
     // watch app install click
-    AnalyticsMixPanel.watch("click", "#installApp1", "Install app", {
+    Mixpanel.watch("click", "#installApp1", "Install app", {
         appName: "app 1"
     });
 
-    AnalyticsMixPanel.watch("click", "#installApp2", "Install app", {
+    Mixpanel.watch("click", "#installApp2", "Install app", {
         appName: "app 2"},
     );
 
-    AnalyticsMixPanel.watch("click", "#installApp3", "Install app", {
+    Mixpanel.watch("click", "#installApp3", "Install app", {
         appName: "app 3"
     });
 });
 
 document.on("closerequest", function(_event) {
-    Analytics.event("app closed");
+    Amplitude.event("app closed");
 });
 
 const headers = {
@@ -285,19 +282,19 @@ document.on("click", function(event, element) {
             break;
 
         case "showEvents":
-            Analytics.log();
+            Amplitude.log();
             break;
 
         case "sendEventsAmplitude":
-            Analytics.send();
+            Amplitude.send();
             break;
 
         case "sendUserMixpanel":
-            AnalyticsMixPanel.sendUserProfile();
+            Mixpanel.sendUserProfile();
             break;
 
         case "sendAllMixpanel":
-            AnalyticsMixPanel.send();
+            Mixpanel.send();
             break;
 
         default:
@@ -335,7 +332,7 @@ document.on("showtab", "pagecontrol", function(event) {
     //console.debug(`event - ${event}`);
 
     // log event
-    Analytics.event(event);
+    Amplitude.event(event);
 });
 
 async function myfetch(url, headers, body) {
