@@ -89,16 +89,16 @@ document.on("ready", function() {
         appName: "app 3",
     });
 
-    Mixpanel.init({
-        log: false,
+    const mixpanel = new Mixpanel({
         // project token
         token: "90063d16f08d604ae6f499ba9c689982",
         // user unique id
         distinctId: Utils.randomStr(10),
+        debug: true,
     });
 
-    // add user profile set
-    Mixpanel.userProfileSet({
+    // add user properties
+    mixpanel.properties({
         // reserved properties
         $name: "Marc",
         $email: "foo@foo.com",
@@ -107,22 +107,22 @@ document.on("ready", function() {
         $city: "Moscow",
 
         // custom properties
-        Address: "Some street",
-        Birthday: "1987-02-11",
+        address: "Some street",
+        birthday: "1987-02-11",
     });
 
-    Mixpanel.event("app started");
+    mixpanel.event("app started");
 
     // watch app install click
-    Mixpanel.watch("click", "#installApp1", "Install app", {
+    mixpanel.watch("click", "#installApp1", "Install app", {
         appName: "app 1"
     });
 
-    Mixpanel.watch("click", "#installApp2", "Install app", {
+    mixpanel.watch("click", "#installApp2", "Install app", {
         appName: "app 2"},
     );
 
-    Mixpanel.watch("click", "#installApp3", "Install app", {
+    mixpanel.watch("click", "#installApp3", "Install app", {
         appName: "app 3"
     });
 });

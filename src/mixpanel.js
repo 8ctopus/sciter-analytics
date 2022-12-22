@@ -6,133 +6,88 @@
 
 export default class MixPanel {
     // event tracking endpoint
-    static #apiEvent = "https://api.mixpanel.com/track";
+    #apiEvent = "https://api.mixpanel.com/track";
 
     // user profile endpoint
-    static #apiUser = "https://api.mixpanel.com/engage";
+    #apiUser = "https://api.mixpanel.com/engage";
 
     // project token
-    static #token;
+    #token;
 
     // user unique id
-    static #distinctId;
+    #userId;
 
-    // events stack
-    static #events = [];
+    // events
+    #events = [];
 
-    // user profile subproperties stack
-    static #userProfileSet = [];
+    // user properties
+    #user = [];
 
-    static #headers = {
-        "Content-Type": "application/x-www-form-urlencoded",
-        Accept: "text/plain",
+    #headers = {
+        "Content-Type": "application/json; charset=utf-8",
+        Accept: "*/*",
     };
 
-    static #env;
-    static #log;
+    #debug;
 
     /**
-     * Initialize
+     * Constructor
      * @param {object} options
      */
-    static init(options) {
+    constructor(options) {
         this.#token = options.token;
-        this.#distinctId = options.distinctId;
-
-        this.#log = options.log ?? false;
+        this.#userId = options.userId;
+        this.#debug = options.debug ?? false;
     }
 
     /**
-     * Add user profile properties
-     * @param {object} userProperties - properties to add. Can have any key. Reserved keys are: $name, $email, $country_code, $region, $city
-     * @note this function overrides properties
+     * Add user properties
+     * @param {object} properties - properties to add. Reserved keys are: $name, $email, $country_code, $region, $city
      */
-    static userProfileSet(userProperties) {
-        this.#userProfileSet = userProperties;
+    property(properties) {
+        if (this.#debug)
+            console.log(`Add properties - ${properties}`);
 
-        if (this.#log)
-            console.log(`properties - ${userProperties}`);
-    }
-
-    /**
-     * Add environment variables
-     * @param {object} environment
-     */
-    static env(environment) {
-        this.#env = {
-            ...this.#env,
-            ...environment,
+        this.#user = {
+            ...this.#user,
+            ...properties,
         };
     }
 
     /**
      * Add event
      * @param {string} label - event label
-     * @param {object} eventProperties - subproperties of the event
+     * @param {object} properties - event properties
      */
-    static event(label, eventProperties) {
+    event(label, properties) {
+        if (this.#debug)
+            console.log(`Add event - ${label}`);
+
         this.#events.push({
             event: label,
             properties: {
                 token: this.#token,
-                distinct_id: this.#distinctId,
-                ...eventProperties,
+                distinct_id: this.#userId,
+                time: Date.now() / 1000,
+                ...properties,
             },
         });
-
-        if (this.#log)
-            console.log(`event - ${label}`);
-    }
-
-    /**
-     * Watch
-     * @param {string} event
-     * @param {string} selector
-     * @param {string} label - event label
-     * @param {object} eventProperties - event subproperties
-     * @returns {boolean}
-     */
-    static watch(event, selector, label, eventProperties) {
-        if (this.#log)
-            console.log(`${event} - ${selector} - ${label} - ` + JSON.stringify(eventProperties));
-
-        if (selector) {
-            document.on(event, selector, () => {
-                this.event(label, eventProperties);
-                console.log(`${event} - ${selector} - ${label}`);
-            });
-        } else {
-            document.on(event, () => {
-                this.event(label, eventProperties);
-            });
-        }
-
-        return true;
-    }
-
-    /**
-     * Send all analytics (event & user profile) to mixpanel
-     * @returns {Promise}
-     */
-    static async send() {
-        this.sendUserProfile();
-        this.sendEvent();
     }
 
     /**
      * Send events to mixpanel
      * @returns {Promise}
      */
-    static async sendEvent() {
-        const body = "data=" + JSON.stringify(
+    async sendEvents() {
+        const body = JSON.stringify(
             this.#events,
         );
 
-        if (this.#log) {
+        if (this.#debug) {
             console.line();
-            console.log("sending events...");
-            console.debug(`endpoint ${this.#apiEvent}`);
-            console.debug(body);
+            console.log("Send events...");
+            //console.log(`endpoint ${this.#apiEvent}`);
+            console.log(body);
         }
 
         const response = await fetch(this.#apiEvent, {
@@ -143,15 +98,14 @@ export default class MixPanel {
         });
 
         if (response.status !== 200 || !response.ok) {
-            console.error(`response status - ${response.status}`);
+            console.error(`Send events - FAILED - ${response.status}`);
             return;
         }
 
-        const json = await response.json();
-
-        if (this.#log) {
+        if (this.#debug) {
             console.line();
-            console.log(json);
+            const json = await response.json();
+            console.log("Send events - OK", json);
         }
     }
 
@@ -159,16 +113,16 @@ export default class MixPanel {
      * Send user profile to mixpanel
      * @returns {Promise}
      */
-    static async sendUserProfile() {
-        const data = "data=" + JSON.stringify({
+    async sendUser() {
+        const data = JSON.stringify({
             token: this.#token,
-            distinct_id: this.#distinctId,
-            $set: this.#userProfileSet,
+            distinct_id: this.#userId,
+            $set: this.#user,
         });
 
-        if (this.#log) {
+        if (this.#debug) {
             console.line();
-            console.log("sending user profile...");
+            console.log("Send user profile...");
             console.debug(`endpoint ${this.#apiUser}`);
             console.debug(data);
         }
@@ -181,38 +135,50 @@ export default class MixPanel {
         });
 
         if (response.status !== 200) {
-            console.error(`response status - ${response.status}`);
+            console.error(`Send user profile - FAILED - ${response.status}`);
             return;
         }
 
-        const json = await response.json();
-
-        if (this.#log) {
+        if (this.#debug) {
             console.line();
-            console.log(json);
+            const json = await response.json();
+            console.log("Send user profile - OK", json);
         }
     }
 
     /**
-     * Log environment and events
+     * Send all to mixpanel
+     * @returns {Promise}
      */
-    static log() {
-        // log environment
-        console.log(this.#env);
+    async send() {
+        this.sendEvents();
+        this.sendUser();
+    }
 
-        /*
-        for (const key in this.#env) {
-            console.debug(`${key}: ${this.#env[key]}`);
+    /**
+     * Watch
+     * @param {string} event
+     * @param {string} selector
+     * @param {string} label - event label
+     * @param {object} properties - event properties
+     * @returns {boolean}
+     */
+    watch(event, selector, label, properties) {
+        if (this.#debug)
+            console.log(`Watch ${event} - ${selector} - ${label} - ` + JSON.stringify(properties));
+
+        if (selector) {
+            document.on(event, selector, () => {
+                console.log(`Event triggered - ${event} - ${selector} - ${label}`);
+                this.event(label, properties);
+            });
+        } else {
+            document.on(event, () => {
+                console.log(`Event triggered - ${event} - ${label}`);
+                this.event(label, properties);
+            });
         }
 
-        // loop through events
-        this.#events.forEach(function(event) {
-            // log event
-            console.debug(event);
-        })
-        */
-
-        // log events
-        console.log(this.#events);
+        return true;
     }
 }
