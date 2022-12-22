@@ -20,10 +20,7 @@ div.vbox {
 import Logger from "node_modules/sciter-logger/src/logger.js";
 import Utils from "node_modules/sciter-utils/src/utils.js";
 
-// Amplitude
 import Amplitude from "src/amplitude.js";
-
-// Mixpanel
 import Mixpanel from "src/mixpanel.js";
 
 // initialize logger
@@ -91,9 +88,9 @@ document.on("ready", function() {
 
     const mixpanel = new Mixpanel({
         // project token
-        token: "90063d16f08d604ae6f499ba9c689982",
+        token: "c557e826f1a76aaa4ed02e4681f95ae4",
         // user unique id
-        distinctId: Utils.randomStr(10),
+        distinctId: Utils.uuid(),
         debug: true,
     });
 
@@ -281,20 +278,12 @@ document.on("click", function(event, element) {
             pagecontrol.showTab("tsSent");
             break;
 
-        case "showEvents":
-            Amplitude.log();
-            break;
-
-        case "sendEventsAmplitude":
+        case "sendAmplitude":
             Amplitude.send();
             break;
 
-        case "sendUserMixpanel":
-            Mixpanel.sendUserProfile();
-            break;
-
-        case "sendAllMixpanel":
-            Mixpanel.send();
+        case "sendMixpanel":
+            mixpanel.send();
             break;
 
         default:
@@ -344,12 +333,11 @@ async function myfetch(url, headers, body) {
     });
 
     console.line();
-    console.log(`response status - ${response.status}`);
+    console.log(`myfetch - response status - ${response.status}`);
 
     const json = await response.json();
-
-    //console.log(response.text());
     console.log(json);
+    //console.log(response.text());
 }
 
 </script>
@@ -357,10 +345,8 @@ async function myfetch(url, headers, body) {
 <body>
     <button #testAmplitude>test Amplitude</button>
     <button #testMixpanel>test Mixpanel</button>
-    <button #showEvents>show events</button>
-    <button #sendEventsAmplitude>send events Amplitude</button>
-    <button #sendUserMixpanel>send user Mixpanel</button>
-    <button #sendAllMixpanel>send all Mixpanel</button>
+    <button #sendAmplitude>send Amplitude</button>
+    <button #sendMixpanel>send Mixpanel</button>
     <pagecontrol header-position="top" header-visible="true">
         <tab caption="login" #tsLogin selected>
             <div .vbox>
