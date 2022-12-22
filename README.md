@@ -37,48 +37,41 @@ Add to your project inside `<script type="module">`
 
 ```js
 // import using npm
-import Analytics from "node_modules/sciter-analytics/src/analytics.js";
+import Mixpanel from "node_modules/sciter-analytics/src/analytics.js";
 
 // import from src
-import Analytics from "src/analytics.js";
+import Mixpanel from "src/analytics.js";
 
-// initialize
-Analytics.init({
-    log: true,
-    endpoint: "http://localhost/index.php",
-    //endpoint: "https://httpbin.org/post",
+const mixpanel = new Mixpanel({
+    // project token
+    token: "c557e826f1a76aaa4ed02e4681f95ae4",
+    // user unique id
+    userId: Utils.uuid(),
+    debug: true,
 });
 
-// add more environmental variables
-Analytics.env({
-    name: "my app name",
-    version: "0.0.1",
-    uuid: uuid(),
+// add user properties
+mixpanel.properties({
+    // reserved properties
+    $name: "John Doe",
+    $email: "john.doe@test.com",
+
+    // custom properties
+    address: "Some street",
+    birthday: "1987-02-11",
 });
 
 // log event
-Analytics.event("app started");
+mixpanel.event("App started");
 
-// watch
-Analytics.watch("focus", "plaintext", "plaintext focused");
-
-// log what happened
-Analytics.log();
+// watch for event
+mixpanel.watch("focus", "plaintext", "plaintext focused");
 
 // send data
-Analytics.send();
+mixpanel.send();
 ```
 
-# endpoints to test
+# other providers to consider
 
 - https://segment.com/
 - https://docs.smartlook.com/
-- https://developer.mixpanel.com/
-- https://developers.amplitude.com/docs
-- https://httpbin.org/
-
-# todo
-
-- fix uuid
-- add first endpoint
-- test fetch error management - https - server refused answer - server error

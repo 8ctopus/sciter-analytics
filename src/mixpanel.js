@@ -1,12 +1,13 @@
 /**
- * Sciter in-app analytics
+ * Mixpanel in-app analytics
  *
  * @author 8ctopus <hello@octopuslabs.io>
+ * @notes https://developer.mixpanel.com/
  */
 
 import * as env from "@env";
 
-export default class MixPanel {
+export default class Mixpanel {
     // event tracking endpoint
     #apiEvent = "https://api.mixpanel.com/track?verbose=1&ip=1";
 

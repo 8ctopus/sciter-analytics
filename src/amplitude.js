@@ -1,7 +1,8 @@
 /**
- * Sciter in-app analytics for Amplitude
+ * Amplitude in-app analytics
  *
  * @author 8ctopus <hello@octopuslabs.io>
+ * @notes https://developers.amplitude.com/docs
  */
 
 import * as env from "@env";
