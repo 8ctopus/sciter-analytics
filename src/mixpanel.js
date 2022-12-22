@@ -4,9 +4,11 @@
  * @author 8ctopus <hello@octopuslabs.io>
  */
 
+import * as env from "@env";
+
 export default class MixPanel {
     // event tracking endpoint
-    #apiEvent = "https://api.mixpanel.com/track?verbose=1&ip=0";
+    #apiEvent = "https://api.mixpanel.com/track?verbose=1&ip=1";
 
     // user profile endpoint
     #apiUser = "https://api.mixpanel.com/engage?verbose=1#profile-set";
@@ -22,11 +24,6 @@ export default class MixPanel {
 
     // user properties
     #user = {};
-
-    #headers = {
-        "Content-Type": "application/json; charset=utf-8",
-        Accept: "*/*",
-    };
 
     #debug;
 
@@ -69,6 +66,12 @@ export default class MixPanel {
                 token: this.#token,
                 distinct_id: this.#userId,
                 time: Date.now() / 1000,
+                //insert_id: Utils.randomStr(22),
+                //device: env.DEVICE, // desktop
+                os: env.PLATFORM, // Windows
+                //$os2: env.OS, // Windows-10.2
+                language: env.language(), // en
+                //country: env.country(), // US
                 ...properties,
             },
         });
@@ -86,24 +89,27 @@ export default class MixPanel {
             console.debug(this.#events);
         }
 
-        return;
-
         const response = await fetch(this.#apiEvent, {
             method: "POST",
-            cache: "no-cache",
-            headers: this.#headers,
-            body : JSON.stringify(this.#events),
+            headers: {
+                "Content-Type": "application/json; charset=utf-8",
+                Accept: "*/*",
+            },
+            body: JSON.stringify(this.#events),
         });
 
-        if (response.status !== 200 || !response.ok) {
-            console.error(`Send events - FAILED - ${response.status}`);
+        const json = await response.json();
+
+        if (response.status !== 200 || !response.ok || json.status !== 1) {
+            console.error("Send events - FAILED", json);
             return;
         }
 
+        console.log("Send events - OK");
+
         if (this.#debug) {
             console.line();
-            const json = await response.json();
-            console.log("Send events - OK", json);
+            console.debug(`response}`, json);
         }
     }
 
@@ -113,41 +119,44 @@ export default class MixPanel {
      */
     async sendUser() {
         const data = {
-            token: this.#token,
-            distinct_id: this.#userId,
+            $token: this.#token,
+            $distinct_id: this.#userId,
             $set: this.#user,
         };
 
         if (this.#debug) {
             console.line();
-            console.log("Send user profile...");
+            console.log("Send user...");
             console.debug(`endpoint ${this.#apiUser}`);
             console.debug(data);
         }
 
-        return;
-
         const response = await fetch(this.#apiUser, {
             method: "POST",
-            cache: "no-cache",
-            headers: this.#headers,
+            headers: {
+                "Content-Type": "application/json; charset=utf-8",
+                Accept: "*/*",
+            },
             body: JSON.stringify(data),
         });
 
-        if (response.status !== 200) {
-            console.error(`Send user profile - FAILED - ${response.status}`);
+        const json = await response.json();
+
+        if (response.status !== 200 || !response.ok || json.status !== 1) {
+            console.error("Send user - FAILED", json);
             return;
         }
 
+        console.log("Send user - OK");
+
         if (this.#debug) {
             console.line();
-            const json = await response.json();
-            console.log("Send user profile - OK", json);
+            console.debug(`response}`, json);
         }
     }
 
     /**
-     * Send all to mixpanel
+     * Send events and user to mixpanel
      * @returns {Promise}
      */
     async send() {
