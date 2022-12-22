@@ -6,10 +6,10 @@
 
 export default class MixPanel {
     // event tracking endpoint
-    #apiEvent = "https://api.mixpanel.com/track";
+    #apiEvent = "https://api.mixpanel.com/track?verbose=1&ip=0";
 
     // user profile endpoint
-    #apiUser = "https://api.mixpanel.com/engage";
+    #apiUser = "https://api.mixpanel.com/engage?verbose=1#profile-set";
 
     // project token
     #token;
