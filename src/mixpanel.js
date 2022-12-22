@@ -43,7 +43,7 @@ export default class MixPanel {
      */
     properties(properties) {
         if (this.#debug)
-            console.log(`Add properties - ${properties}`);
+            console.log("Add properties -", properties);
 
         this.#user = {
             ...this.#user,
@@ -58,7 +58,7 @@ export default class MixPanel {
      */
     event(label, properties) {
         if (this.#debug)
-            console.log(`Add event - ${label} - ` + JSON.stringify(properties));
+            console.log(`Add event - ${label} - ` + JSON.stringify(properties ?? {}));
 
         this.#events.push({
             event: label,
@@ -67,11 +67,11 @@ export default class MixPanel {
                 distinct_id: this.#userId,
                 time: Date.now() / 1000,
                 //insert_id: Utils.randomStr(22),
-                //device: env.DEVICE, // desktop
-                os: env.PLATFORM, // Windows
+                $os: env.PLATFORM, // Windows
                 //$os2: env.OS, // Windows-10.2
+                //device: env.DEVICE, // desktop
                 language: env.language(), // en
-                //country: env.country(), // US
+                //country_code: env.country(), // US
                 ...properties,
             },
         });
@@ -98,10 +98,15 @@ export default class MixPanel {
             body: JSON.stringify(this.#events),
         });
 
+        if (response.status !== 200 || !response.ok) {
+            console.error(`Send events - FAILED - response - ${response.status} - ${response.ok}`);
+            return;
+        }
+
         const json = await response.json();
 
-        if (response.status !== 200 || !response.ok || json.status !== 1) {
-            console.error("Send events - FAILED", json);
+        if (json.status !== 1) {
+            console.error("Send events - FAILED - json -", json);
             return;
         }
 
@@ -109,7 +114,7 @@ export default class MixPanel {
 
         if (this.#debug) {
             console.line();
-            console.debug(`response}`, json);
+            console.debug("Send events - response -", json);
         }
     }
 
@@ -118,11 +123,11 @@ export default class MixPanel {
      * @returns {Promise}
      */
     async sendUser() {
-        const data = {
+        const data = [{
             $token: this.#token,
             $distinct_id: this.#userId,
             $set: this.#user,
-        };
+        }];
 
         if (this.#debug) {
             console.line();
@@ -140,19 +145,19 @@ export default class MixPanel {
             body: JSON.stringify(data),
         });
 
-        const json = await response.json();
+        if (response.status !== 200 || !response.ok) {
+            console.error(`Send user - FAILED - response - ${response.status} - ${response.ok}`);
+            return;
+        }
 
-        if (response.status !== 200 || !response.ok || json.status !== 1) {
-            console.error("Send user - FAILED", json);
+        const text = await response.text();
+
+        if (text !== "1") {
+            console.error("Send user - FAILED - text -", text);
             return;
         }
 
         console.log("Send user - OK");
-
-        if (this.#debug) {
-            console.line();
-            console.debug(`response}`, json);
-        }
     }
 
     /**

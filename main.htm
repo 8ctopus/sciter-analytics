@@ -76,10 +76,10 @@ document.on("ready", function() {
         },
     });
 
-    Amplitude.event("app started");
+    Amplitude.event("Start app");
 
     // watch app close
-    Amplitude.watch("closerequest", undefined, "app close request");
+    Amplitude.watch("closerequest", undefined, "App close request");
 
     // watch app install click
     Amplitude.watch("click", "#installApp1", "Install app", {
@@ -99,16 +99,16 @@ document.on("ready", function() {
         // reserved properties
         $name: "John Doe",
         $email: "john.doe@test.com",
-        $country_code: "RU",
-        $region: "Moscow",
-        $city: "Moscow",
+        //$country_code: "RU",
+        //$region: "Moscow",
+        //$city: "Moscow",
 
         // custom properties
         address: "Some street",
         birthday: "1987-02-11",
     });
 
-    mixpanel.event("app started");
+    mixpanel.event("Start app");
 
     // watch app install click
     mixpanel.watch("click", "#installApp1", "Install app", {
@@ -125,7 +125,7 @@ document.on("ready", function() {
 });
 
 document.on("closerequest", function(_event) {
-    Amplitude.event("app closed");
+    Amplitude.event("Close app");
 });
 
 const headers = {
@@ -244,7 +244,7 @@ document.on("click", "button#testMixpanel", function() {
             $token: projectToken,
             $distinct_id: userId,
             $set: {
-                name: "John Doe",
+                $name: "John Doe",
                 $email: "john.doe@test.net",
             },
         },
