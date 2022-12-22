@@ -44,7 +44,7 @@ export default class MixPanel {
      * Add user properties
      * @param {object} properties - properties to add. Reserved keys are: $name, $email, $country_code, $region, $city
      */
-    property(properties) {
+    properties(properties) {
         if (this.#debug)
             console.log(`Add properties - ${properties}`);
 
