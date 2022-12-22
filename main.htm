@@ -112,26 +112,22 @@ document.on("ready", function() {
 
     // watch app install click
     mixpanel.watch("click", "#installApp1", "Install app", {
-        appName: "app 1"
+        appName: "app 1",
     });
 
     mixpanel.watch("click", "#installApp2", "Install app", {
-        appName: "app 2"},
-    );
+        appName: "app 2",
+    });
 
     mixpanel.watch("click", "#installApp3", "Install app", {
-        appName: "app 3"
+        appName: "app 3",
     });
 });
 
 document.on("closerequest", function(_event) {
     Amplitude.event("Close app");
+    mixpanel.event("Close app");
 });
-
-const headers = {
-    "Content-Type": "application/json; charset=utf-8",
-    Accept: "*/*",
-};
 
 document.on("click", "button#httpbin", function() {
     const url = "https://httpbin.org/post";
@@ -140,6 +136,11 @@ document.on("click", "button#httpbin", function() {
         uuid: Utils.uuid(),
         event: "button clicked",
     });
+
+    const headers = {
+        "Content-Type": "application/json; charset=utf-8",
+        Accept: "*/*",
+    };
 
     myfetch(url, headers, body);
 });
@@ -171,7 +172,11 @@ document.on("click", "button#testAmplitude", function() {
         }],
     });
 
-    console.debug(body);
+    const headers = {
+        "Content-Type": "application/json; charset=utf-8",
+        Accept: "*/*",
+    };
+
     myfetch(url, headers, body);
 });
 
@@ -191,7 +196,7 @@ document.on("click", "button#testMixpanel", function() {
     // create two events
     let body = JSON.stringify([
         {
-            event: "send 1 from app",
+            event: "App event 1",
             properties: {
                 // project token
                 token: projectToken,
@@ -222,7 +227,7 @@ document.on("click", "button#testMixpanel", function() {
             },
         },
         {
-            event: "send 2 from app",
+            event: "App event 2",
             properties: {
                 token: projectToken,
                 time: time,
@@ -234,6 +239,12 @@ document.on("click", "button#testMixpanel", function() {
     ]);
 
     console.debug(body);
+
+    const headers = {
+        "Content-Type": "application/json; charset=utf-8",
+        Accept: "*/*",
+    };
+
     myfetch(apiEvents, headers, body);
 
     // create user
@@ -296,32 +307,32 @@ document.on("showtab", "pagecontrol", function(event) {
 
     switch (event.detail.tab) {
         case "tsLogin":
-            event = "start login";
+            event = "Start login";
             break;
 
         case "tsSignup":
-            event = "start signup";
+            event = "Start signup";
             break;
 
         case "tsDashboard":
-            event = "end login";
+            event = "End login";
             break;
 
         case "tsReset":
-            event = "start reset";
+            event = "Start reset";
             break;
 
         case "tsSent":
-            event = "end reset";
+            event = "End reset";
             break;
 
         default:
     }
 
-    //console.debug(`event - ${event}`);
-
     // log event
     Amplitude.event(event);
+    mixpanel.event(event);
+    //console.debug(`event - ${event}`);
 });
 
 async function myfetch(url, headers, body) {
@@ -336,17 +347,17 @@ async function myfetch(url, headers, body) {
     console.log(`myfetch - response status - ${response.status}`);
 
     const json = await response.json();
-    console.log(json);
+    console.log("response json -", json);
     //console.log(response.text());
 }
 
 </script>
 </head>
 <body>
-    <button #testAmplitude>test Amplitude</button>
-    <button #testMixpanel>test Mixpanel</button>
     <button #sendAmplitude>send Amplitude</button>
     <button #sendMixpanel>send Mixpanel</button>
+    <button #testAmplitude>experiment Amplitude</button>
+    <button #testMixpanel>experiment Mixpanel</button>
     <pagecontrol header-position="top" header-visible="true">
         <tab caption="login" #tsLogin selected>
             <div .vbox>
