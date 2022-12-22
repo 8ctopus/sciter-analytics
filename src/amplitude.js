@@ -66,7 +66,7 @@ export default class Amplitude {
         this.#events.push({
             eventProperties: {
                 ...this.#eventProperties,
-                ...eventProperties
+                ...eventProperties,
             },
             userId: this.#userId,
             eventType: label,
