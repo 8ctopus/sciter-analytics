@@ -61,7 +61,7 @@ export default class MixPanel {
      */
     event(label, properties) {
         if (this.#debug)
-            console.log(`Add event - ${label}`);
+            console.log(`Add event - ${label} - ` + JSON.stringify(properties));
 
         this.#events.push({
             event: label,
@@ -79,22 +79,20 @@ export default class MixPanel {
      * @returns {Promise}
      */
     async sendEvents() {
-        const body = JSON.stringify(
-            this.#events,
-        );
-
         if (this.#debug) {
             console.line();
             console.log("Send events...");
-            //console.log(`endpoint ${this.#apiEvent}`);
-            console.log(body);
+            //console.debug(`endpoint ${this.#apiEvent}`);
+            console.debug(this.#events);
         }
+
+        return;
 
         const response = await fetch(this.#apiEvent, {
             method: "POST",
             cache: "no-cache",
             headers: this.#headers,
-            body,
+            body : JSON.stringify(this.#events),
         });
 
         if (response.status !== 200 || !response.ok) {
@@ -114,11 +112,11 @@ export default class MixPanel {
      * @returns {Promise}
      */
     async sendUser() {
-        const data = JSON.stringify({
+        const data = {
             token: this.#token,
             distinct_id: this.#userId,
             $set: this.#user,
-        });
+        };
 
         if (this.#debug) {
             console.line();
@@ -127,11 +125,13 @@ export default class MixPanel {
             console.debug(data);
         }
 
+        return;
+
         const response = await fetch(this.#apiUser, {
             method: "POST",
             cache: "no-cache",
             headers: this.#headers,
-            body: data,
+            body: JSON.stringify(data),
         });
 
         if (response.status !== 200) {
@@ -165,16 +165,16 @@ export default class MixPanel {
      */
     watch(event, selector, label, properties) {
         if (this.#debug)
-            console.log(`Watch ${event} - ${selector} - ${label} - ` + JSON.stringify(properties));
+            console.log(`Watch - ${label} - ${event} - ${selector} - ` + JSON.stringify(properties));
 
         if (selector) {
             document.on(event, selector, () => {
-                console.log(`Event triggered - ${event} - ${selector} - ${label}`);
+                console.log(`Event triggered - ${label} - ${event} - ${selector}`);
                 this.event(label, properties);
             });
         } else {
             document.on(event, () => {
-                console.log(`Event triggered - ${event} - ${label}`);
+                console.log(`Event triggered - ${label} - ${event}`);
                 this.event(label, properties);
             });
         }

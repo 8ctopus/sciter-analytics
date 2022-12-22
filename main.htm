@@ -35,6 +35,14 @@ Logger.attach();
 // capture unhandled exceptions
 Logger.capture();
 
+const mixpanel = new Mixpanel({
+    // project token
+    token: "c557e826f1a76aaa4ed02e4681f95ae4",
+    // user unique id
+    userId: Utils.uuid(),
+    debug: true,
+});
+
 document.on("ready", function() {
     // subscribe to logger messages
     Logger.plaintext(document.$("plaintext#logger"));
@@ -86,19 +94,11 @@ document.on("ready", function() {
         appName: "app 3",
     });
 
-    const mixpanel = new Mixpanel({
-        // project token
-        token: "c557e826f1a76aaa4ed02e4681f95ae4",
-        // user unique id
-        distinctId: Utils.uuid(),
-        debug: true,
-    });
-
     // add user properties
     mixpanel.properties({
         // reserved properties
-        $name: "Marc",
-        $email: "foo@foo.com",
+        $name: "John Doe",
+        $email: "john.doe@test.com",
         $country_code: "RU",
         $region: "Moscow",
         $city: "Moscow",
@@ -207,7 +207,7 @@ document.on("click", "button#testMixpanel", function() {
                 // optional
                 ip,
 
-                // optional
+                // optional but reserved
                 $os: "Windows",
                 $browser: "Microsoft Edge",
                 $current_url: "https://test.net/pricing/",
