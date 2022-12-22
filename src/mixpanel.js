@@ -21,7 +21,7 @@ export default class MixPanel {
     #events = [];
 
     // user properties
-    #user = [];
+    #user = {};
 
     #headers = {
         "Content-Type": "application/json; charset=utf-8",
