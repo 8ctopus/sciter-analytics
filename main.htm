@@ -35,6 +35,17 @@ Logger.attach();
 // capture unhandled exceptions
 Logger.capture();
 
+const amplitude = new Amplitude({
+    log: true,
+    endpoint: "https://api2.amplitude.com/2/httpapi",
+    apikey: "0fad02b65a75f270c199db6b920fbf92",
+    userId: Utils.randomStr(10),
+    eventProperties: {
+        appName: "Sciter analytics",
+        appRelease: "debug",
+    },
+});
+
 const mixpanel = new Mixpanel({
     // project token
     token: "c557e826f1a76aaa4ed02e4681f95ae4",
@@ -62,35 +73,22 @@ document.on("ready", function() {
     // bring window to front and set input focus
     Window.this.activate(true);
 
-    /**
-     * Amplitude
-     */
-    Amplitude.init({
-        log: true,
-        endpoint: "https://api2.amplitude.com/2/httpapi",
-        apikey: "0fad02b65a75f270c199db6b920fbf92",
-        userId: Utils.randomStr(10),
-        eventProperties: {
-            appName: "Sciter analytics",
-            appRelease: "debug",
-        },
-    });
-
-    Amplitude.event("Start app");
+    // amplitude
+    amplitude.event("Start app");
 
     // watch app close
-    Amplitude.watch("closerequest", undefined, "App close request");
+    amplitude.watch("closerequest", undefined, "App close request");
 
     // watch app install click
-    Amplitude.watch("click", "#installApp1", "Install app", {
+    amplitude.watch("click", "#installApp1", "Install app", {
         appName: "app 1",
     });
 
-    Amplitude.watch("click", "#installApp2", "Install app", {
+    amplitude.watch("click", "#installApp2", "Install app", {
         appName: "app 2",
     });
 
-    Amplitude.watch("click", "#installApp3", "Install app", {
+    amplitude.watch("click", "#installApp3", "Install app", {
         appName: "app 3",
     });
 
@@ -125,7 +123,7 @@ document.on("ready", function() {
 });
 
 document.on("closerequest", function(_event) {
-    Amplitude.event("Close app");
+    amplitude.event("Close app");
     mixpanel.event("Close app");
 });
 
@@ -290,7 +288,7 @@ document.on("click", function(event, element) {
             break;
 
         case "sendAmplitude":
-            Amplitude.send();
+            amplitude.send();
             break;
 
         case "sendMixpanel":
@@ -330,7 +328,7 @@ document.on("showtab", "pagecontrol", function(event) {
     }
 
     // log event
-    Amplitude.event(event);
+    amplitude.event(event);
     mixpanel.event(event);
     //console.debug(`event - ${event}`);
 });

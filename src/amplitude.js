@@ -8,27 +8,27 @@
 import * as env from "@env";
 
 export default class Amplitude {
-    static #endpoint;
-    static #apiKey;
-    static #userId;
+    #endpoint;
+    #apiKey;
+    #userId;
 
-    static #eventProperties = [];
+    #eventProperties = [];
 
-    static #log;
+    #log;
 
-    static #headers = {
+    #headers = {
         "Content-Type": "application/json; charset=utf-8",
         Accept: "*/*",
     };
 
-    static #env;
-    static #events = [];
+    #env;
+    #events = [];
 
     /**
-     * Initialize
+     * Constructor
      * @param {object} options
      */
-    static init(options) {
+    constructor(options) {
         this.#endpoint = options.endpoint ?? "";
         this.#apiKey = options.apikey ?? "";
         this.#userId = options.userId ?? "";
@@ -51,7 +51,7 @@ export default class Amplitude {
      * Add environment variables
      * @param {object} environment
      */
-    static env(environment) {
+    env(environment) {
         this.#env = {
             ...this.#env,
             ...environment,
@@ -63,7 +63,7 @@ export default class Amplitude {
      * @param {string} label - event label
      * @param {object} eventProperties
      */
-    static event(label, eventProperties) {
+    event(label, eventProperties) {
         this.#events.push({
             eventProperties: {
                 ...this.#eventProperties,
@@ -94,7 +94,7 @@ export default class Amplitude {
      * @returns {boolean}
      * @throws Error
      */
-    static watch(event, selector, label, eventProperties) {
+    watch(event, selector, label, eventProperties) {
         if (arguments.length < 3)
             throw new Error("method requires 3 arguments");
 
@@ -121,7 +121,7 @@ export default class Amplitude {
      * Send analytics to remote server
      * @returns {Promise}
      */
-    static async send() {
+    async send() {
         const body = JSON.stringify({
             apiKey: this.#apiKey,
             //env: this.#env,
@@ -157,7 +157,7 @@ export default class Amplitude {
     /**
      * Log environment and events
      */
-    static log() {
+    log() {
         // log environment
         console.log(this.#env);
 
