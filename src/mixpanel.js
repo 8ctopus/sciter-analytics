@@ -179,6 +179,9 @@ export default class Mixpanel {
      * @returns {boolean}
      */
     watch(event, selector, label, properties) {
+        if (arguments.length < 3)
+            throw new Error("method requires a minimum of 3 arguments");
+
         if (this.#debug)
             console.log(`Watch - ${label} - ${event} - ${selector} - ` + JSON.stringify(properties));
 
@@ -195,5 +198,16 @@ export default class Mixpanel {
         }
 
         return true;
+    }
+
+    /**
+     * Log environment and events
+     */
+    log() {
+        // log environment
+        console.log(this.#user);
+
+        // log events
+        console.log(this.#events);
     }
 }
