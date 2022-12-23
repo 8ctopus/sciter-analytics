@@ -28,7 +28,7 @@ export default class Amplitude {
         this.#eventProperties = options.eventProperties ?? {};
         this.#debug = options.debug ?? false;
 
-        // add environment variables
+        // default environment variables
         this.#env = {
             device: env.DEVICE,
             platform: env.PLATFORM,
@@ -56,6 +56,9 @@ export default class Amplitude {
      * @param {object} properties
      */
     event(label, properties) {
+        if (this.#debug)
+            console.log(`Add event - ${label} - ` + JSON.stringify(properties ?? {}));
+
         this.#events.push({
             eventProperties: {
                 ...this.#eventProperties,
@@ -65,48 +68,6 @@ export default class Amplitude {
             eventType: label,
             time: Math.round(Date.now() / 1000),
         });
-
-        /*
-        this.#events.push({
-            label,
-            timestamp: new Date(),
-        });
-
-        if (this.#debug)
-            console.log(`event - ${label}`);
-        */
-    }
-
-    /**
-     * Watch
-     * @param {string} event
-     * @param {string} selector
-     * @param {string} label
-     * @param {object} properties
-     * @returns {boolean}
-     * @throws Error
-     */
-    watch(event, selector, label, properties) {
-        if (arguments.length < 3)
-            throw new Error("method requires 3 arguments");
-
-        //console.log(`${event} - ${selector} - ${label}`);
-
-        if (selector) {
-            document.on(event, selector, () => {
-                this.event(label, properties);
-                console.log(`${event} - ${selector} - ${label}`);
-            });
-        }
-        /*
-        else {
-            document.on(event, () => {
-                this.event(label);
-            });
-        }
-        */
-
-        return true;
     }
 
     /**
@@ -149,23 +110,42 @@ export default class Amplitude {
     }
 
     /**
+     * Watch
+     * @param {string} event
+     * @param {string} selector
+     * @param {string} label
+     * @param {object} properties
+     * @throws Error
+     * @returns {boolean}
+     */
+    watch(event, selector, label, properties) {
+        if (arguments.length < 3)
+            throw new Error("method requires a minimum of 3 arguments");
+
+        if (this.#debug)
+            console.log(`Watch - ${label} - ${event} - ${selector} - ` + JSON.stringify(properties));
+
+        if (selector) {
+            document.on(event, selector, () => {
+                console.log(`Event triggered - ${label} - ${event} - ${selector}`);
+                this.event(label, properties);
+            });
+        } else {
+            document.on(event, () => {
+                console.log(`Event triggered - ${label} - ${event}`);
+                this.event(label, properties);
+            });
+        }
+
+        return true;
+    }
+
+    /**
      * Log environment and events
      */
     log() {
         // log environment
         console.log(this.#env);
-
-        /*
-        for (const key in this.#env) {
-            console.debug(`${key}: ${this.#env[key]}`);
-        }
-
-        // loop through events
-        this.#events.forEach(function(event) {
-            // log event
-            console.debug(event);
-        })
-        */
 
         // log events
         console.log(this.#events);
