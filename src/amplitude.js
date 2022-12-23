@@ -8,13 +8,13 @@
 import * as env from "@env";
 
 export default class Amplitude {
-    #endpoint;
+    #endpoint = "https://api2.amplitude.com/2/httpapi";
     #apiKey;
     #userId;
+    #debug;
 
+    #events = [];
     #eventProperties = [];
-
-    #log;
 
     #headers = {
         "Content-Type": "application/json; charset=utf-8",
@@ -22,17 +22,16 @@ export default class Amplitude {
     };
 
     #env;
-    #events = [];
 
     /**
      * Constructor
      * @param {object} options
      */
     constructor(options) {
-        this.#endpoint = options.endpoint ?? "";
         this.#apiKey = options.apikey ?? "";
         this.#userId = options.userId ?? "";
         this.#eventProperties = options.eventProperties ?? [];
+        this.#debug = options.debug ?? false;
 
         // add environment variables
         this.#env = {
@@ -43,8 +42,6 @@ export default class Amplitude {
             country: env.country(),
             userName: env.userName(),
         };
-
-        this.#log = options.log ?? false;
     }
 
     /**
@@ -80,7 +77,7 @@ export default class Amplitude {
             timestamp: new Date(),
         });
 
-        if (this.#log)
+        if (this.#debug)
             console.log(`event - ${label}`);
         */
     }
@@ -128,7 +125,7 @@ export default class Amplitude {
             events: this.#events,
         });
 
-        if (this.#log) {
+        if (this.#debug) {
             console.debug(`endpoint ${this.#endpoint}`);
             console.debug(this.#events);
         }
@@ -147,7 +144,7 @@ export default class Amplitude {
 
         const json = await response.json();
 
-        if (this.#log) {
+        if (this.#debug) {
             console.line();
             //console.log(response.text());
             console.log(json);

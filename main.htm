@@ -36,10 +36,9 @@ Logger.attach();
 Logger.capture();
 
 const amplitude = new Amplitude({
-    log: true,
-    endpoint: "https://api2.amplitude.com/2/httpapi",
     apikey: "0fad02b65a75f270c199db6b920fbf92",
     userId: Utils.randomStr(10),
+    debug: true,
     eventProperties: {
         appName: "Sciter analytics",
         appRelease: "debug",
