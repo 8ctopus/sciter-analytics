@@ -71,7 +71,7 @@ export default class Amplitude {
     }
 
     /**
-     * Send analytics to remote server
+     * Send to amplitude
      * @returns {Promise}
      */
     async send() {
@@ -82,6 +82,7 @@ export default class Amplitude {
         });
 
         if (this.#debug) {
+            console.log("Send events...");
             console.debug(`endpoint ${this.#endpoint}`);
             console.debug(this.#events);
         }
@@ -96,15 +97,15 @@ export default class Amplitude {
         });
 
         if (response.status !== 200 || !response.ok) {
-            console.error(`response status - ${response.status}`);
+            console.error(`Send events - FAILED - response - ${response.status} - ${response.ok}`);
             return;
         }
 
-        const json = await response.json();
+        console.log("Send events - OK");
 
         if (this.#debug) {
             console.line();
-            //console.log(response.text());
+            const json = await response.json();
             console.log(json);
         }
     }
