@@ -1,20 +1,24 @@
 # sciter in-app analytics
 
-This is a [sciter.js](https://sciter.com/) in-app analytics experiment.
+This is a [sciter.js](https://sciter.com/) package for in-app analytics.
 
-The general idea is to record what users do within the application.
+The general idea is to record what users do within the application in order to optimize the user experience within the app.
 
-The app records:
-- environment variables: app name, version, operating system, ...
-- events: whatever event you want to track
+Two types of events are recorded:
 
-===== IT IS WORK IN PROGRESS =====
+  * events that are triggered by user actions (e.g. clicking a button)
+  * events that are triggered by the application (e.g. a page is loaded)
+
+The following services have been implemented:
+- [Mixpanel](https://mixpanel.com/) - 90% tested
+- [Amplitude](https://amplitude.com/) - not fully tested
 
 ## demo
 
 - git clone the repository
 - install packages `npm install`
-- install latest sciter sdk `npm run install-sdk`
+- install the latest sciter sdk `npm run install-sdk`
+- update the mixpanel project token or amplitude api key
 - start the demo `npm run scapp`
 
 ## demo requirements
