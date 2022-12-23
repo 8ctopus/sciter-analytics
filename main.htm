@@ -20,8 +20,8 @@ div.vbox {
 import Logger from "node_modules/sciter-logger/src/logger.js";
 import Utils from "node_modules/sciter-utils/src/utils.js";
 
-import Amplitude from "src/amplitude.js";
 import Mixpanel from "src/mixpanel.js";
+import Amplitude from "src/amplitude.js";
 
 // initialize logger
 Logger.init({
@@ -34,24 +34,6 @@ Logger.attach();
 
 // capture unhandled exceptions
 Logger.capture();
-
-const amplitude = new Amplitude({
-    apikey: "0fad02b65a75f270c199db6b920fbf92",
-    userId: Utils.randomStr(10),
-    debug: true,
-    eventProperties: {
-        appName: "Sciter analytics",
-        appRelease: "debug",
-    },
-});
-
-const mixpanel = new Mixpanel({
-    // project token
-    token: "c557e826f1a76aaa4ed02e4681f95ae4",
-    // user unique id
-    userId: Utils.uuid(),
-    debug: true,
-});
 
 document.on("ready", function() {
     // subscribe to logger messages
@@ -72,23 +54,13 @@ document.on("ready", function() {
     // bring window to front and set input focus
     Window.this.activate(true);
 
-    // amplitude
-    amplitude.event("Start app");
-
-    // watch app close
-    amplitude.watch("closerequest", undefined, "App close request");
-
-    // watch app install click
-    amplitude.watch("click", "#installApp1", "Install app", {
-        appName: "app 1",
-    });
-
-    amplitude.watch("click", "#installApp2", "Install app", {
-        appName: "app 2",
-    });
-
-    amplitude.watch("click", "#installApp3", "Install app", {
-        appName: "app 3",
+    // mixpanel
+    globalThis.mixpanel = new Mixpanel({
+        // project token
+        token: "c557e826f1a76aaa4ed02e4681f95ae4",
+        // user unique id
+        userId: Utils.uuid(),
+        debug: true,
     });
 
     // add user properties
@@ -117,6 +89,35 @@ document.on("ready", function() {
     });
 
     mixpanel.watch("click", "#installApp3", "Install app", {
+        appName: "app 3",
+    });
+
+    // amplitude
+    globalThis.amplitude = new Amplitude({
+        apikey: "0fad02b65a75f270c199db6b920fbf92",
+        userId: Utils.randomStr(10),
+        debug: true,
+        eventProperties: {
+            appName: "Sciter analytics",
+            appRelease: "debug",
+        },
+    });
+
+    amplitude.event("Start app");
+
+    // watch app close
+    amplitude.watch("closerequest", undefined, "App close request");
+
+    // watch app install click
+    amplitude.watch("click", "#installApp1", "Install app", {
+        appName: "app 1",
+    });
+
+    amplitude.watch("click", "#installApp2", "Install app", {
+        appName: "app 2",
+    });
+
+    amplitude.watch("click", "#installApp3", "Install app", {
         appName: "app 3",
     });
 });
