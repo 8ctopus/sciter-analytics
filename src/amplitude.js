@@ -14,7 +14,7 @@ export default class Amplitude {
     #debug;
 
     #events = [];
-    #eventProperties = [];
+    #eventProperties;
 
     #headers = {
         "Content-Type": "application/json; charset=utf-8",
@@ -30,7 +30,7 @@ export default class Amplitude {
     constructor(options) {
         this.#apiKey = options.apikey ?? "";
         this.#userId = options.userId ?? "";
-        this.#eventProperties = options.eventProperties ?? [];
+        this.#eventProperties = options.eventProperties ?? {};
         this.#debug = options.debug ?? false;
 
         // add environment variables
@@ -58,13 +58,13 @@ export default class Amplitude {
     /**
      * Add event
      * @param {string} label - event label
-     * @param {object} eventProperties
+     * @param {object} properties
      */
-    event(label, eventProperties) {
+    event(label, properties) {
         this.#events.push({
             eventProperties: {
                 ...this.#eventProperties,
-                ...eventProperties,
+                ...properties,
             },
             userId: this.#userId,
             eventType: label,
@@ -87,11 +87,11 @@ export default class Amplitude {
      * @param {string} event
      * @param {string} selector
      * @param {string} label
-     * @param {object} eventProperties
+     * @param {object} properties
      * @returns {boolean}
      * @throws Error
      */
-    watch(event, selector, label, eventProperties) {
+    watch(event, selector, label, properties) {
         if (arguments.length < 3)
             throw new Error("method requires 3 arguments");
 
@@ -99,7 +99,7 @@ export default class Amplitude {
 
         if (selector) {
             document.on(event, selector, () => {
-                this.event(label, eventProperties);
+                this.event(label, properties);
                 console.log(`${event} - ${selector} - ${label}`);
             });
         }
