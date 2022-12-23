@@ -9,7 +9,8 @@ Two types of events are recorded:
   * events that are triggered by user actions (e.g. clicking a button)
   * events that are triggered by the application (e.g. a page is loaded)
 
-The following services have been implemented:
+The following application analytics providers have been implemented:
+
 - [Mixpanel](https://mixpanel.com/) - 90% tested
 - [Amplitude](https://amplitude.com/) - not fully tested
 
@@ -33,6 +34,11 @@ The following services have been implemented:
 
 - install package `npm install sciter-analytics`
 
+```js
+import Mixpanel from "node_modules/sciter-analytics/src/mixpanel.js";
+import Amplitude from "node_modules/sciter-analytics/src/amplitude.js";
+```
+
 ### using source
 
 - copy the `src` dir to your project
@@ -40,12 +46,13 @@ The following services have been implemented:
 Add to your project inside `<script type="module">`
 
 ```js
-// import using npm
-import Mixpanel from "node_modules/sciter-analytics/src/analytics.js";
+import Mixpanel from "src/mixpanel.js";
+import Amplitude from "src/amplitude.js";
+```
 
-// import from src
-import Mixpanel from "src/analytics.js";
+### Mixpanel sample
 
+```js
 const mixpanel = new Mixpanel({
     // project token
     token: "c557e826f1a76aaa4ed02e4681f95ae4",
@@ -73,6 +80,38 @@ mixpanel.watch("focus", "plaintext", "plaintext focused");
 
 // send data
 mixpanel.send();
+```
+
+### Amplitude sample
+
+```js
+const amplitude = new Amplitude({
+    apikey: "0fad02b65a75f270c199db6b920fbf92",
+    userId: Utils.randomStr(10),
+    debug: true,
+    eventProperties: {
+        appName: "Sciter analytics",
+        appRelease: "debug",
+    },
+});
+
+amplitude.event("Start app");
+
+// watch app close
+amplitude.watch("closerequest", undefined, "App close request");
+
+// watch app install click
+amplitude.watch("click", "#installApp1", "Install app", {
+    appName: "app 1",
+});
+
+amplitude.watch("click", "#installApp2", "Install app", {
+    appName: "app 2",
+});
+
+amplitude.watch("click", "#installApp3", "Install app", {
+    appName: "app 3",
+});
 ```
 
 # other providers to consider
