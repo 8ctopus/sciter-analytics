@@ -16,11 +16,6 @@ export default class Amplitude {
     #events = [];
     #eventProperties;
 
-    #headers = {
-        "Content-Type": "application/json; charset=utf-8",
-        Accept: "*/*",
-    };
-
     #env;
 
     /**
@@ -132,8 +127,10 @@ export default class Amplitude {
 
         const response = await fetch(this.#endpoint, {
             method: "POST",
-            cache: "no-cache",
-            headers: this.#headers,
+            headers: {
+                "Content-Type": "application/json; charset=utf-8",
+                Accept: "*/*",
+            },
             body,
         });
 
