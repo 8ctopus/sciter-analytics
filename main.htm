@@ -35,6 +35,9 @@ Logger.attach();
 // capture unhandled exceptions
 Logger.capture();
 
+let mixpanel;
+let amplitude;
+
 document.on("ready", function() {
     // subscribe to logger messages
     Logger.plaintext(document.$("plaintext#logger"));
@@ -55,7 +58,7 @@ document.on("ready", function() {
     Window.this.activate(true);
 
     // mixpanel
-    globalThis.mixpanel = new Mixpanel({
+    mixpanel = new Mixpanel({
         // project token
         token: "c557e826f1a76aaa4ed02e4681f95ae4",
         // user unique id
@@ -92,8 +95,7 @@ document.on("ready", function() {
         appName: "app 3",
     });
 
-    // amplitude
-    globalThis.amplitude = new Amplitude({
+    amplitude = new Amplitude({
         apikey: "0fad02b65a75f270c199db6b920fbf92",
         userId: Utils.randomStr(10),
         debug: true,

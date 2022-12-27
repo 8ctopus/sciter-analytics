@@ -176,6 +176,7 @@ export default class Mixpanel {
      * @param {string} selector
      * @param {string} label - event label
      * @param {object} properties - event properties
+     * @throws Error
      * @returns {boolean}
      */
     watch(event, selector, label, properties) {
