@@ -24,28 +24,30 @@ The following application analytics providers have been implemented:
 
 ## demo requirements
 
-- A recent version of Node.js `node` (tested with 16 LTS) and its package manager `npm`.
+- A recent version of Node.js `node` (tested with 22 LTS) and its package manager `npm`.
     - On Windows [download](https://nodejs.dev/download/) and run the installer
     - On Linux check the [installation guide](https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-ubuntu-20-04#option-2-%E2%80%94-installing-node-js-with-apt-using-a-nodesource-ppa)
 
 ## add to your project
 
+You can either add it to your project using npm or by copying the src directory.
+
 ### using npm
 
 - install package `npm install sciter-analytics`
 
+### copy source
+
+- add the `src` dir to your project
+
+### add to `<script type="module">`
+
 ```js
+// using npm
 import Mixpanel from "node_modules/sciter-analytics/src/mixpanel.js";
 import Amplitude from "node_modules/sciter-analytics/src/amplitude.js";
-```
 
-### using source
-
-- copy the `src` dir to your project
-
-Add to your project inside `<script type="module">`
-
-```js
+// copying src
 import Mixpanel from "src/mixpanel.js";
 import Amplitude from "src/amplitude.js";
 ```
