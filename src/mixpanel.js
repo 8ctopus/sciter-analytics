@@ -1,7 +1,6 @@
 /**
  * Mixpanel in-app analytics
  *
- * @author 8ctopus <hello@octopuslabs.io>
  * @notes https://developer.mixpanel.com/
  */
 

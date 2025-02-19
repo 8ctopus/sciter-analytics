@@ -1,7 +1,6 @@
 /**
  * Amplitude in-app analytics
  *
- * @author 8ctopus <hello@octopuslabs.io>
  * @notes https://developers.amplitude.com/docs
  */
 
