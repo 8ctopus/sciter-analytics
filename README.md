@@ -52,7 +52,7 @@ import Mixpanel from "src/mixpanel.js";
 import Amplitude from "src/amplitude.js";
 ```
 
-### Mixpanel sample
+### Mixpanel example
 
 ```js
 const mixpanel = new Mixpanel({
@@ -84,7 +84,7 @@ mixpanel.watch("focus", "plaintext", "plaintext focused");
 mixpanel.send();
 ```
 
-### Amplitude sample
+### Amplitude example
 
 ```js
 const amplitude = new Amplitude({
