@@ -1,8 +1,8 @@
 # sciter in-app analytics
 
-This is a [sciter.js](https://sciter.com/) package for in-app analytics.
+This is a [sciter.js](https://sciter.com/) package designed for in-app analytics.
 
-The general idea is to record what users do within the application in order to optimize the user experience within the app.
+The primary goal is to track user interactions within the application to gain insights that help enhance the overall user experience. By analyzing user behavior, we can optimize the app's functionality and design to better meet user needs.
 
 Two types of events are recorded:
 
