@@ -19,7 +19,7 @@ The following application analytics providers have been implemented:
 - git clone the repository
 - install packages `npm install`
 - install the latest sciter sdk `npm run install-sdk`
-- update the mixpanel project token or amplitude api key
+- update the mixpanel project token or amplitude api key in `main.htm`
 - start the demo `npm run scapp`
 
 ## demo requirements
