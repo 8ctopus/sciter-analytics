@@ -118,3 +118,12 @@ amplitude.watch("click", "#installApp3", "Install app", {
 
 - https://segment.com/
 - https://docs.smartlook.com/
+
+## todo
+
+- implement generic tracking class? and make conversion on server to mixpanel specific?
+- implement proxy because we will be stuck if we plan to stop using mixpanel
+- distinguish between users using the same ip - user account, computer name is not possible
+- what to do when we have no user id? ask mixpanel to create it or we create it? if yes, how do we get it from mixpanel?
+- mixpanel - what happens if id is not passed in constructor?
+- add auto-send option
