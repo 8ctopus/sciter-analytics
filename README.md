@@ -1,5 +1,8 @@
 # sciter analytics
 
+![latest version](https://img.shields.io/npm/v/sciter-analytics.svg)
+![downloads](https://img.shields.io/npm/dy/sciter-analytics.svg)
+
 This is a [sciter.js](https://sciter.com/) package designed for in-app analytics.
 
 The primary goal is to track user interactions within the application to gain insights that help enhance the overall user experience. By analyzing user behavior, we can optimize the app's functionality and design to better meet user needs.
