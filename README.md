@@ -1,4 +1,4 @@
-# sciter in-app analytics
+# sciter analytics
 
 This is a [sciter.js](https://sciter.com/) package designed for in-app analytics.
 
