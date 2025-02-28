@@ -25,7 +25,7 @@ The following application analytics providers have been implemented:
 - update the mixpanel project token or amplitude api key in `main.htm`
 - start the demo `npm run scapp`
 
-## demo requirements
+### demo requirements
 
 - A recent version of Node.js `node` (tested with 22 LTS) and its package manager `npm`.
     - On Windows [download](https://nodejs.dev/download/) and run the installer
